@@ -1,15 +1,24 @@
+import { useState } from "react";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Dashboard from "./pages/Dashboard";
+
 function App() {
+  const [pantalla, setPantalla] = useState("login");
+
+  if (pantalla === "register") {
+    return <Register onBack={() => setPantalla("login")} />;
+  }
+
+  if (pantalla === "dashboard") {
+    return <Dashboard />;
+  }
+
   return (
-    <div
-      style={{
-        color: "white",
-        background: "green",
-        minHeight: "100vh",
-        padding: "50px",
-      }}
-    >
-      <h1>Ganado360 funciona 🎉</h1>
-    </div>
+    <Login
+      onRegister={() => setPantalla("register")}
+      onLogin={() => setPantalla("dashboard")}
+    />
   );
 }
 
