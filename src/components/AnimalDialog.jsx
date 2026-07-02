@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -10,74 +10,102 @@ import {
   MenuItem,
 } from "@mui/material";
 
-import { agregarAnimal } from "../services/animalService";
+import {
+  agregarAnimal,
+  editarAnimal,
+} from "../services/animalService";
 
 import razas from "../data/razas";
 import sexos from "../data/sexos";
 import categorias from "../data/categorias";
 import estados from "../data/estados";
 
-function AnimalDialog({ open, onClose, onAnimalAdded }) {
-  const [animal, setAnimal] = useState({
-    rp: "",
-    caravana: "",
-    nombre: "",
-    raza: "",
-    sexo: "",
-    categoria: "",
-    estado: "Activo",
-    fechaNacimiento: "",
-    lote: "",
-    peso: "",
-    observaciones: "",
-  });
+const animalVacio = {
+  rp: "",
+  caravana: "",
+  nombre: "",
+  raza: "",
+  sexo: "",
+  categoria: "",
+  estado: "Activo",
+  fechaNacimiento: "",
+  lote: "",
+  peso: "",
+  observaciones: "",
+};
 
-  const cambiarValor = (e) => {
+function AnimalDialog({
+  open,
+  onClose,
+  onAnimalAdded,
+  animalSeleccionado,
+}) {
+
+  const [animal, setAnimal] = useState(animalVacio);
+
+  useEffect(() => {
+
+    if (animalSeleccionado) {
+      setAnimal(animalSeleccionado);
+    } else {
+      setAnimal(animalVacio);
+    }
+
+  }, [animalSeleccionado, open]);
+
+  function cambiarValor(e) {
+
     setAnimal({
       ...animal,
       [e.target.name]: e.target.value,
     });
-  };
 
-  const guardar = async () => {
+  }
+
+  async function guardar() {
+
     if (!animal.rp || !animal.caravana) {
       alert("RP y Caravana son obligatorios.");
       return;
     }
 
-    await agregarAnimal(animal);
+    if (animal.id) {
+
+      const { id, ...datos } = animal;
+
+      await editarAnimal(id, datos);
+
+    } else {
+
+      await agregarAnimal(animal);
+
+    }
+
+    onAnimalAdded();
 
     onClose();
 
-    if (onAnimalAdded) {
-      onAnimalAdded();
-    }
+    setAnimal(animalVacio);
 
-    setAnimal({
-      rp: "",
-      caravana: "",
-      nombre: "",
-      raza: "",
-      sexo: "",
-      categoria: "",
-      estado: "Activo",
-      fechaNacimiento: "",
-      lote: "",
-      peso: "",
-      observaciones: "",
-    });
-  };
+  }
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
 
-      <DialogTitle>🐄 Nuevo Animal</DialogTitle>
+    <Dialog
+      open={open}
+      onClose={onClose}
+      maxWidth="md"
+      fullWidth
+    >
+
+      <DialogTitle>
+        {animal.id ? "✏️ Editar Animal" : "🐄 Nuevo Animal"}
+      </DialogTitle>
 
       <DialogContent>
 
         <Grid container spacing={2} sx={{ mt: 1 }}>
-
-          <Grid item xs={6}>
+                  <Grid item xs={6}>
             <TextField
               fullWidth
               required
@@ -223,10 +251,10 @@ function AnimalDialog({ open, onClose, onAnimalAdded }) {
           </Grid>
 
         </Grid>
-
-      </DialogContent>
+              </DialogContent>
 
       <DialogActions>
+
         <Button onClick={onClose}>
           Cancelar
         </Button>
@@ -235,12 +263,15 @@ function AnimalDialog({ open, onClose, onAnimalAdded }) {
           variant="contained"
           onClick={guardar}
         >
-          Guardar
+          {animal.id ? "Actualizar" : "Guardar"}
         </Button>
+
       </DialogActions>
 
     </Dialog>
+
   );
+
 }
 
 export default AnimalDialog;

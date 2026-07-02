@@ -1,7 +1,9 @@
 import * as XLSX from "xlsx";
 import mapearColumnas from "./mapearColumnas";
+import convertirFilas from "./convertirFilas";
 
 export async function analizarExcel(file) {
+
   const buffer = await file.arrayBuffer();
 
   const workbook = XLSX.read(buffer);
@@ -17,9 +19,13 @@ export async function analizarExcel(file) {
 
   const mapeo = mapearColumnas(encabezados);
 
+  const animales = convertirFilas(filas, mapeo);
+
   return {
     encabezados,
     filas,
     mapeo,
+    animales,
   };
+
 }

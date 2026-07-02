@@ -11,40 +11,62 @@ import {
   TableCell,
   TableBody,
   Chip,
+  Alert,
+  Box,
 } from "@mui/material";
 
 function ImportExcelDialog({
   open,
   onClose,
   encabezados = [],
-  mapeo = {},
   filas = [],
+  mapeo = {},
   onImportar,
 }) {
-  return (
-    <Dialog open={open} onClose={onClose} maxWidth="lg" fullWidth>
+  const columnasDetectadas = Object.keys(mapeo).length;
+  const totalColumnas = encabezados.length;
 
+  return (
+    <Dialog
+      open={open}
+      onClose={onClose}
+      maxWidth="lg"
+      fullWidth
+    >
       <DialogTitle>
-        📥 Importar Animales
+        📥 Importador Inteligente de Excel
       </DialogTitle>
 
       <DialogContent>
 
-        <Typography sx={{ mb: 2 }}>
-          Ganado360 detectó automáticamente estas columnas:
+        <Alert severity="info" sx={{ mb: 3 }}>
+          Se encontraron <b>{filas.length - 1}</b> registros.
+        </Alert>
+
+        <Typography variant="h6" gutterBottom>
+          Columnas detectadas
         </Typography>
 
-        {Object.entries(mapeo).map(([campo, indice]) => (
-          <Chip
-            key={campo}
-            label={`${encabezados[indice]} ➜ ${campo}`}
-            color="success"
-            sx={{ mr: 1, mb: 1 }}
-          />
-        ))}
+        <Box sx={{ mb: 3 }}>
+          {Object.entries(mapeo).map(([campo, indice]) => (
+            <Chip
+              key={campo}
+              color="success"
+              label={`${encabezados[indice]} → ${campo}`}
+              sx={{ mr: 1, mb: 1 }}
+            />
+          ))}
+        </Box>
 
-        <Typography sx={{ mt: 3, mb: 2 }}>
-          Vista previa del archivo
+        {columnasDetectadas < totalColumnas && (
+          <Alert severity="warning" sx={{ mb: 3 }}>
+            Algunas columnas no fueron reconocidas automáticamente.
+            En la próxima versión podrán asignarse manualmente.
+          </Alert>
+        )}
+
+        <Typography variant="h6" gutterBottom>
+          Vista previa
         </Typography>
 
         <Table size="small">
@@ -52,11 +74,13 @@ function ImportExcelDialog({
           <TableHead>
 
             <TableRow>
-              {encabezados.map((h, i) => (
-                <TableCell key={i}>
-                  <b>{h}</b>
+
+              {encabezados.map((columna, index) => (
+                <TableCell key={index}>
+                  <b>{columna}</b>
                 </TableCell>
               ))}
+
             </TableRow>
 
           </TableHead>
@@ -68,9 +92,11 @@ function ImportExcelDialog({
               <TableRow key={index}>
 
                 {fila.map((valor, i) => (
+
                   <TableCell key={i}>
                     {valor}
                   </TableCell>
+
                 ))}
 
               </TableRow>
@@ -93,7 +119,7 @@ function ImportExcelDialog({
           variant="contained"
           onClick={onImportar}
         >
-          Importar
+          🚀 Importar
         </Button>
 
       </DialogActions>

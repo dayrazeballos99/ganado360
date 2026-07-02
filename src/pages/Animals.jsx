@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import Layout from "../components/Layout";
 import AnimalDialog from "../components/AnimalDialog";
 import AnimalTable from "../components/AnimalTable";
+import ImportExcelDialog from "../components/ImportExcelDialog";
 
 import {
   obtenerAnimales,
@@ -10,8 +11,10 @@ import {
   agregarMuchosAnimales,
 } from "../services/animalService";
 
-import { exportarExcel, importarExcel } from "../utils/excel";
+import { exportarExcel } from "../utils/excel";
 import { exportarPDF } from "../utils/pdf";
+
+import { analizarExcel } from "../importador/importadorInteligente";
 
 import {
   Box,
@@ -23,9 +26,21 @@ import {
 } from "@mui/material";
 
 function Animals() {
+
   const [animales, setAnimales] = useState([]);
   const [buscar, setBuscar] = useState("");
+
   const [openDialog, setOpenDialog] = useState(false);
+  const [openImport, setOpenImport] = useState(false);
+
+  const [animalSeleccionado, setAnimalSeleccionado] = useState(null);
+
+  const [previewExcel, setPreviewExcel] = useState({
+    encabezados: [],
+    filas: [],
+    mapeo: {},
+    animales: [],
+  });
 
   const inputFile = useRef();
 
@@ -38,45 +53,80 @@ function Animals() {
     cargarAnimales();
   }, []);
 
+  function nuevoAnimal() {
+    setAnimalSeleccionado(null);
+    setOpenDialog(true);
+  }
+
+  function editar(animal) {
+    setAnimalSeleccionado(animal);
+    setOpenDialog(true);
+  }
+
+  function ver(animal) {
+    console.log(animal);
+  }
+
   async function borrarAnimal(animal) {
+
     if (!window.confirm(`¿Eliminar ${animal.nombre || animal.rp}?`)) return;
 
     await eliminarAnimal(animal.id);
+
     cargarAnimales();
   }
 
   async function importar(event) {
+
     const archivo = event.target.files[0];
 
     if (!archivo) return;
 
-    const datos = await importarExcel(archivo);
+    const resultado = await analizarExcel(archivo);
 
-    await agregarMuchosAnimales(datos);
+    setPreviewExcel(resultado);
+
+    setOpenImport(true);
+
+  }
+
+  async function confirmarImportacion() {
+
+    await agregarMuchosAnimales(previewExcel.animales);
+
+    setOpenImport(false);
 
     cargarAnimales();
 
-    alert("Importación finalizada.");
+    alert(`${previewExcel.animales.length} animales importados.`);
   }
 
   const animalesFiltrados = animales.filter((animal) => {
+
     const texto = buscar.toLowerCase();
 
     return (
-      animal.rp?.toLowerCase().includes(texto) ||
-      animal.caravana?.toLowerCase().includes(texto) ||
-      animal.nombre?.toLowerCase().includes(texto)
-    );
-  });
 
-  return (
+      animal.rp?.toLowerCase().includes(texto) ||
+
+      animal.caravana?.toLowerCase().includes(texto) ||
+
+      animal.nombre?.toLowerCase().includes(texto)
+
+    );
+
+  });
+    return (
+
     <Layout>
+
       <Box
         display="flex"
         justifyContent="space-between"
         alignItems="center"
         mb={3}
       >
+
         <Typography variant="h4" fontWeight="bold">
           🐄 Gestión de Animales
         </Typography>
@@ -91,8 +141,8 @@ function Animals() {
           </Button>
 
           <input
-            type="file"
             hidden
+            type="file"
             ref={inputFile}
             accept=".xlsx,.xls"
             onChange={importar}
@@ -114,35 +164,53 @@ function Animals() {
 
           <Button
             variant="contained"
-            onClick={() => setOpenDialog(true)}
+            onClick={nuevoAnimal}
           >
             + Nuevo Animal
           </Button>
 
         </Stack>
+
       </Box>
 
       <Paper sx={{ p: 2, mb: 3 }}>
+
         <TextField
           fullWidth
           label="Buscar por RP, Caravana o Nombre..."
           value={buscar}
           onChange={(e) => setBuscar(e.target.value)}
         />
+
       </Paper>
 
       <AnimalTable
         animales={animalesFiltrados}
         onDelete={borrarAnimal}
+        onEdit={editar}
+        onView={ver}
       />
 
       <AnimalDialog
         open={openDialog}
         onClose={() => setOpenDialog(false)}
         onAnimalAdded={cargarAnimales}
+        animalSeleccionado={animalSeleccionado}
       />
+
+      <ImportExcelDialog
+        open={openImport}
+        onClose={() => setOpenImport(false)}
+        encabezados={previewExcel.encabezados}
+        filas={previewExcel.filas}
+        mapeo={previewExcel.mapeo}
+        onImportar={confirmarImportacion}
+      />
+
     </Layout>
+
   );
+
 }
 
 export default Animals;

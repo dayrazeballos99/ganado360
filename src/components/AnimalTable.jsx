@@ -1,10 +1,16 @@
 import { DataGrid } from "@mui/x-data-grid";
-import { IconButton } from "@mui/material";
+import { IconButton, Tooltip } from "@mui/material";
 
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-function AnimalTable({ animales, onDelete }) {
+function AnimalTable({
+  animales,
+  onDelete,
+  onEdit,
+  onView,
+}) {
   const columnas = [
     {
       field: "rp",
@@ -14,12 +20,12 @@ function AnimalTable({ animales, onDelete }) {
     {
       field: "caravana",
       headerName: "Caravana",
-      width: 140,
+      width: 130,
     },
     {
       field: "nombre",
       headerName: "Nombre",
-      width: 180,
+      width: 170,
     },
     {
       field: "raza",
@@ -29,42 +35,70 @@ function AnimalTable({ animales, onDelete }) {
     {
       field: "sexo",
       headerName: "Sexo",
-      width: 120,
+      width: 110,
+    },
+    {
+      field: "categoria",
+      headerName: "Categoría",
+      width: 130,
     },
     {
       field: "peso",
-      headerName: "Peso (kg)",
+      headerName: "Peso",
+      width: 100,
+      renderCell: (params) =>
+        params.value ? `${params.value} kg` : "",
+    },
+    {
+      field: "estado",
+      headerName: "Estado",
       width: 120,
     },
     {
       field: "acciones",
       headerName: "Acciones",
-      width: 130,
+      width: 170,
       sortable: false,
       filterable: false,
       renderCell: (params) => (
         <>
-          <IconButton color="primary">
-            <EditIcon />
-          </IconButton>
+          <Tooltip title="Ver ficha">
+            <IconButton
+              color="info"
+              onClick={() => onView?.(params.row)}
+            >
+              <VisibilityIcon />
+            </IconButton>
+          </Tooltip>
 
-          <IconButton
-            color="error"
-            onClick={() => onDelete(params.row)}
-          >
-            <DeleteIcon />
-          </IconButton>
+          <Tooltip title="Editar">
+            <IconButton
+              color="primary"
+              onClick={() => onEdit?.(params.row)}
+            >
+              <EditIcon />
+            </IconButton>
+          </Tooltip>
+
+          <Tooltip title="Eliminar">
+            <IconButton
+              color="error"
+              onClick={() => onDelete(params.row)}
+            >
+              <DeleteIcon />
+            </IconButton>
+          </Tooltip>
         </>
       ),
     },
   ];
 
   return (
-    <div style={{ height: 550, width: "100%" }}>
+    <div style={{ height: 600, width: "100%" }}>
       <DataGrid
         rows={animales}
         columns={columnas}
-        pageSizeOptions={[10, 20, 50]}
+        pageSizeOptions={[10, 20, 50, 100]}
         initialState={{
           pagination: {
             paginationModel: {
