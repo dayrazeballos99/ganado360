@@ -1,8 +1,19 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase/firebase";
 
-function Register({ onBack }) {
+import {
+  Box,
+  Button,
+  Paper,
+  TextField,
+  Typography,
+} from "@mui/material";
+
+function Register() {
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -17,7 +28,7 @@ function Register({ onBack }) {
 
       alert("Usuario registrado correctamente.");
 
-      onBack();
+      navigate("/login");
     } catch (error) {
       console.error(error);
       alert("No se pudo registrar el usuario.");
@@ -25,66 +36,55 @@ function Register({ onBack }) {
   };
 
   return (
-    <div
-      style={{
-        maxWidth: "400px",
-        margin: "100px auto",
-        padding: "30px",
-        border: "1px solid #ccc",
-        borderRadius: "10px",
+    <Box
+      sx={{
+        minHeight: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        background: "#f5f7f5",
       }}
     >
-      <h1 style={{ textAlign: "center", color: "#2E7D32" }}>
-        🐄 Crear cuenta
-      </h1>
+      <Paper sx={{ p: 5, width: 400 }}>
+        <Typography variant="h4" align="center" mb={3}>
+          🐄 Crear cuenta
+        </Typography>
 
-      <input
-        type="email"
-        placeholder="Correo electrónico"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        style={{ width: "100%", padding: "10px", marginBottom: "15px" }}
-      />
+        <TextField
+          fullWidth
+          label="Correo electrónico"
+          margin="normal"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
 
-      <input
-        type="password"
-        placeholder="Contraseña"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        style={{ width: "100%", padding: "10px", marginBottom: "15px" }}
-      />
+        <TextField
+          fullWidth
+          type="password"
+          label="Contraseña"
+          margin="normal"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
 
-      <button
-        onClick={registrar}
-        style={{
-          width: "100%",
-          padding: "12px",
-          background: "#2E7D32",
-          color: "white",
-          border: "none",
-          borderRadius: "8px",
-          cursor: "pointer",
-        }}
-      >
-        Registrarse
-      </button>
+        <Button
+          fullWidth
+          variant="contained"
+          sx={{ mt: 3 }}
+          onClick={registrar}
+        >
+          Registrarse
+        </Button>
 
-      <button
-        onClick={onBack}
-        style={{
-          width: "100%",
-          padding: "12px",
-          marginTop: "10px",
-          background: "#666",
-          color: "white",
-          border: "none",
-          borderRadius: "8px",
-          cursor: "pointer",
-        }}
-      >
-        Volver
-      </button>
-    </div>
+        <Button
+          fullWidth
+          sx={{ mt: 2 }}
+          onClick={() => navigate("/login")}
+        >
+          Volver al Login
+        </Button>
+      </Paper>
+    </Box>
   );
 }
 

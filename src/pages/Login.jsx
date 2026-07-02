@@ -1,8 +1,19 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase/firebase";
 
-function Login({ onRegister, onLogin }) {
+import {
+  Box,
+  Button,
+  Paper,
+  TextField,
+  Typography,
+} from "@mui/material";
+
+function Login() {
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -15,9 +26,7 @@ function Login({ onRegister, onLogin }) {
     try {
       await signInWithEmailAndPassword(auth, email, password);
 
-      alert("Bienvenido a Ganado360");
-
-      onLogin();
+      navigate("/inicio");
     } catch (error) {
       alert("Correo o contraseña incorrectos.");
       console.error(error);
@@ -25,66 +34,55 @@ function Login({ onRegister, onLogin }) {
   };
 
   return (
-    <div
-      style={{
-        maxWidth: "400px",
-        margin: "100px auto",
-        padding: "30px",
-        border: "1px solid #ccc",
-        borderRadius: "10px",
+    <Box
+      sx={{
+        minHeight: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        background: "#f5f7f5",
       }}
     >
-      <h1 style={{ textAlign: "center", color: "#2E7D32" }}>
-        🐄 Ganado360
-      </h1>
+      <Paper sx={{ p: 5, width: 400 }}>
+        <Typography variant="h4" align="center" mb={3}>
+          🐄 Ganado360
+        </Typography>
 
-      <input
-        type="email"
-        placeholder="Correo electrónico"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        style={{ width: "100%", padding: "10px", marginBottom: "15px" }}
-      />
+        <TextField
+          fullWidth
+          label="Correo electrónico"
+          margin="normal"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
 
-      <input
-        type="password"
-        placeholder="Contraseña"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        style={{ width: "100%", padding: "10px", marginBottom: "15px" }}
-      />
+        <TextField
+          fullWidth
+          type="password"
+          label="Contraseña"
+          margin="normal"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
 
-      <button
-        onClick={iniciarSesion}
-        style={{
-          width: "100%",
-          padding: "12px",
-          background: "#2E7D32",
-          color: "white",
-          border: "none",
-          borderRadius: "8px",
-          cursor: "pointer",
-        }}
-      >
-        Iniciar sesión
-      </button>
+        <Button
+          fullWidth
+          variant="contained"
+          sx={{ mt: 3 }}
+          onClick={iniciarSesion}
+        >
+          Iniciar sesión
+        </Button>
 
-      <button
-        onClick={onRegister}
-        style={{
-          width: "100%",
-          padding: "12px",
-          marginTop: "10px",
-          background: "#1976D2",
-          color: "white",
-          border: "none",
-          borderRadius: "8px",
-          cursor: "pointer",
-        }}
-      >
-        Crear cuenta
-      </button>
-    </div>
+        <Button
+          fullWidth
+          sx={{ mt: 2 }}
+          onClick={() => navigate("/register")}
+        >
+          Crear cuenta
+        </Button>
+      </Paper>
+    </Box>
   );
 }
 

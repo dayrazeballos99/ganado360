@@ -1,25 +1,7 @@
-import { useState } from "react";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Dashboard from "./pages/Dashboard";
+import AppRoutes from "./routes/AppRoutes";
 
 function App() {
-  const [pantalla, setPantalla] = useState("login");
-
-  if (pantalla === "register") {
-    return <Register onBack={() => setPantalla("login")} />;
-  }
-
-  if (pantalla === "dashboard") {
-    return <Dashboard />;
-  }
-
-  return (
-    <Login
-      onRegister={() => setPantalla("register")}
-      onLogin={() => setPantalla("dashboard")}
-    />
-  );
+  return <AppRoutes />;
 }
 
 export default App;

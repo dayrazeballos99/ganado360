@@ -1,57 +1,82 @@
-import { useState } from "react";
-import Animals from "./Animals";
+import Layout from "../components/Layout";
+import StatCard from "../components/StatCard";
+
+import { Grid, Typography, Paper, Box } from "@mui/material";
 
 function Dashboard() {
-  const [pantalla, setPantalla] = useState("inicio");
-
-  if (pantalla === "animales") {
-    return <Animals />;
-  }
-
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "#f5f5f5",
-        padding: "40px",
-      }}
-    >
-      <h1 style={{ color: "#2E7D32" }}>🐄 Ganado360</h1>
+    <Layout>
+      <Typography variant="h4" fontWeight="bold" mb={3}>
+        👋 Bienvenida, Dayra
+      </Typography>
 
-      <h2>Bienvenido</h2>
+      <Typography color="text.secondary" mb={4}>
+        Resumen general de tu establecimiento.
+      </Typography>
 
-      <hr />
+      <Grid container spacing={3}>
+        <Grid item xs={12} md={6} lg={3}>
+          <StatCard
+            titulo="Animales"
+            valor="0"
+            icono="🐄"
+            color="#C8E6C9"
+          />
+        </Grid>
 
-      <button
-        style={boton}
-        onClick={() => setPantalla("animales")}
-      >
-        🐄 Animales
-      </button>
+        <Grid item xs={12} md={6} lg={3}>
+          <StatCard
+            titulo="Peso promedio"
+            valor="0 kg"
+            icono="⚖️"
+            color="#BBDEFB"
+          />
+        </Grid>
 
-      <button style={boton}>⚖️ Pesajes</button>
+        <Grid item xs={12} md={6} lg={3}>
+          <StatCard
+            titulo="Alertas"
+            valor="0"
+            icono="💉"
+            color="#FFE082"
+          />
+        </Grid>
 
-      <button style={boton}>💉 Sanidad</button>
+        <Grid item xs={12} md={6} lg={3}>
+          <StatCard
+            titulo="Lotes"
+            valor="0"
+            icono="🌱"
+            color="#DCEDC8"
+          />
+        </Grid>
+      </Grid>
 
-      <button style={boton}>🌱 Lotes</button>
+      <Box mt={5}>
+        <Paper sx={{ p: 3, borderRadius: 3 }}>
+          <Typography variant="h6" gutterBottom>
+            📅 Próximas tareas
+          </Typography>
 
-      <button style={boton}>📈 Reportes</button>
+          <Typography color="text.secondary">
+            No hay tareas pendientes.
+          </Typography>
+        </Paper>
+      </Box>
 
-      <button style={boton}>⚙️ Configuración</button>
-    </div>
+      <Box mt={3}>
+        <Paper sx={{ p: 3, borderRadius: 3 }}>
+          <Typography variant="h6" gutterBottom>
+            📋 Actividad reciente
+          </Typography>
+
+          <Typography color="text.secondary">
+            Todavía no hay movimientos registrados.
+          </Typography>
+        </Paper>
+      </Box>
+    </Layout>
   );
 }
-
-const boton = {
-  width: "260px",
-  padding: "15px",
-  margin: "15px 0",
-  fontSize: "18px",
-  border: "none",
-  borderRadius: "8px",
-  cursor: "pointer",
-  background: "#2E7D32",
-  color: "white",
-};
 
 export default Dashboard;
