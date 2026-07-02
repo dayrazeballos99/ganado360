@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import Layout from "../components/Layout";
 import AnimalDialog from "../components/AnimalDialog";
@@ -7,7 +7,11 @@ import AnimalTable from "../components/AnimalTable";
 import {
   obtenerAnimales,
   eliminarAnimal,
+  agregarMuchosAnimales,
 } from "../services/animalService";
+
+import { exportarExcel, importarExcel } from "../utils/excel";
+import { exportarPDF } from "../utils/pdf";
 
 import {
   Box,
@@ -15,12 +19,15 @@ import {
   Paper,
   TextField,
   Typography,
+  Stack,
 } from "@mui/material";
 
 function Animals() {
   const [animales, setAnimales] = useState([]);
   const [buscar, setBuscar] = useState("");
   const [openDialog, setOpenDialog] = useState(false);
+
+  const inputFile = useRef();
 
   async function cargarAnimales() {
     const datos = await obtenerAnimales();
@@ -32,15 +39,24 @@ function Animals() {
   }, []);
 
   async function borrarAnimal(animal) {
-    const confirmar = window.confirm(
-      `¿Eliminar el animal ${animal.nombre || animal.rp}?`
-    );
-
-    if (!confirmar) return;
+    if (!window.confirm(`¿Eliminar ${animal.nombre || animal.rp}?`)) return;
 
     await eliminarAnimal(animal.id);
+    cargarAnimales();
+  }
+
+  async function importar(event) {
+    const archivo = event.target.files[0];
+
+    if (!archivo) return;
+
+    const datos = await importarExcel(archivo);
+
+    await agregarMuchosAnimales(datos);
 
     cargarAnimales();
+
+    alert("Importación finalizada.");
   }
 
   const animalesFiltrados = animales.filter((animal) => {
@@ -65,12 +81,45 @@ function Animals() {
           🐄 Gestión de Animales
         </Typography>
 
-        <Button
-          variant="contained"
-          onClick={() => setOpenDialog(true)}
-        >
-          + Nuevo Animal
-        </Button>
+        <Stack direction="row" spacing={2}>
+
+          <Button
+            variant="outlined"
+            onClick={() => inputFile.current.click()}
+          >
+            📥 Importar Excel
+          </Button>
+
+          <input
+            type="file"
+            hidden
+            ref={inputFile}
+            accept=".xlsx,.xls"
+            onChange={importar}
+          />
+
+          <Button
+            variant="outlined"
+            onClick={() => exportarExcel(animalesFiltrados)}
+          >
+            📤 Excel
+          </Button>
+
+          <Button
+            variant="outlined"
+            onClick={() => exportarPDF(animalesFiltrados)}
+          >
+            📄 PDF
+          </Button>
+
+          <Button
+            variant="contained"
+            onClick={() => setOpenDialog(true)}
+          >
+            + Nuevo Animal
+          </Button>
+
+        </Stack>
       </Box>
 
       <Paper sx={{ p: 2, mb: 3 }}>

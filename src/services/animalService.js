@@ -24,6 +24,12 @@ export async function agregarAnimal(animal) {
   await addDoc(animalesRef, animal);
 }
 
+export async function agregarMuchosAnimales(animales) {
+  for (const animal of animales) {
+    await addDoc(animalesRef, animal);
+  }
+}
+
 export async function editarAnimal(id, animal) {
   const referencia = doc(db, "animales", id);
   await updateDoc(referencia, animal);
