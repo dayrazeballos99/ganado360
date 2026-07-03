@@ -4,6 +4,7 @@ import {
   collection,
   addDoc,
   getDocs,
+  getDoc,
   updateDoc,
   deleteDoc,
   doc,
@@ -38,4 +39,20 @@ export async function editarAnimal(id, animal) {
 export async function eliminarAnimal(id) {
   const referencia = doc(db, "animales", id);
   await deleteDoc(referencia);
+}
+export async function obtenerAnimalPorId(id) {
+
+  const referencia = doc(db, "animales", id);
+
+  const documento = await getDoc(referencia);
+
+  if (!documento.exists()) {
+    return null;
+  }
+
+  return {
+    id: documento.id,
+    ...documento.data(),
+  };
+
 }

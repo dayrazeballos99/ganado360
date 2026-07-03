@@ -1,6 +1,6 @@
+import { useNavigate } from "react-router-dom";
 import { DataGrid } from "@mui/x-data-grid";
 import { IconButton, Tooltip } from "@mui/material";
-
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -11,6 +11,7 @@ function AnimalTable({
   onEdit,
   onView,
 }) {
+  const navigate = useNavigate();
   const columnas = [
     {
       field: "rp",
@@ -65,7 +66,7 @@ function AnimalTable({
           <Tooltip title="Ver ficha">
             <IconButton
               color="info"
-              onClick={() => onView?.(params.row)}
+              onClick={() => navigate(`/animal/${params.row.id}`)}
             >
               <VisibilityIcon />
             </IconButton>
