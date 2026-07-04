@@ -1,6 +1,13 @@
 import { Card, CardContent, Typography, Box } from "@mui/material";
 
-function StatCard({ titulo, valor, icono, color }) {
+function StatCard({
+  titulo,
+  valor,
+  icono,
+  color,
+  subtitulo,
+}) {
+
   return (
     <Card
       elevation={3}
@@ -29,6 +36,17 @@ function StatCard({ titulo, valor, icono, color }) {
             >
               {valor}
             </Typography>
+            {subtitulo && (
+
+  <Typography
+    variant="body2"
+    color="text.secondary"
+    mt={1}
+  >
+    {subtitulo}
+  </Typography>
+
+)}
           </Box>
 
           <Box
