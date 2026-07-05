@@ -62,6 +62,7 @@ function AnimalProfile() {
           <Tab label="🌾 Alimentación" />
           <Tab label="🐄 Reproducción" />
           <Tab label="🚚 Movimientos" />
+          <Tab label="📜 Historial" />
           <Tab label="💰 Comercial" />
           <Tab label="📊 Estadísticas" />
 
@@ -141,12 +142,16 @@ function AnimalProfile() {
 {tab === 5 && (
   <Typography>Próximamente Movimientos.</Typography>
 )}
-
 {tab === 6 && (
+  <Typography>
+    Próximamente Historial.
+  </Typography>
+)}
+{tab === 7 && (
   <Typography>Próximamente Comercial.</Typography>
 )}
 
-{tab === 7 && (
+{tab === 8 && (
   <Typography>Próximamente Estadísticas.</Typography>
 )}
 

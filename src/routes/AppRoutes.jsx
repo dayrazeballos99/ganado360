@@ -5,12 +5,21 @@ import Register from "../pages/Register";
 import Dashboard from "../pages/Dashboard";
 import Animals from "../pages/Animals";
 import AnimalProfile from "../pages/AnimalProfile";
+import Movements from "../pages/Movements";
+import Eventos from "../pages/Eventos";
 
 function AppRoutes() {
   return (
     <BrowserRouter>
       <Routes>
-
+<Route
+  path="/movimientos"
+  element={<Movements />}
+/>
+<Route
+  path="/eventos"
+  element={<Eventos />}
+/>
         <Route path="/" element={<Navigate to="/login" replace />} />
 
         <Route path="/login" element={<Login />} />

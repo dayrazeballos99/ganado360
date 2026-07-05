@@ -15,6 +15,7 @@ import VaccinesIcon from "@mui/icons-material/Vaccines";
 import AgricultureIcon from "@mui/icons-material/Agriculture";
 import AssessmentIcon from "@mui/icons-material/Assessment";
 import SettingsIcon from "@mui/icons-material/Settings";
+import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -41,6 +42,11 @@ const menu = [
     icono: <VaccinesIcon />,
     ruta: "/sanidad",
   },
+  {
+  texto: "Movimientos",
+  icono: <LocalShippingIcon />,
+  ruta: "/movimientos",
+},
   {
     texto: "Lotes",
     icono: <AgricultureIcon />,

@@ -21,11 +21,43 @@ export async function analizarExcel(file) {
 
   const animales = convertirFilas(filas, mapeo);
 
+  const pesos = animales
+  .map((a) => Number(a.peso))
+  .filter((p) => !isNaN(p) && p > 0);
+
+const resumen = {
+
+  cantidad: animales.length,
+
+  pesoPromedio: pesos.length
+    ? (
+        pesos.reduce((a, b) => a + b, 0) /
+        pesos.length
+      ).toFixed(1)
+    : 0,
+
+  pesoMinimo: pesos.length
+    ? Math.min(...pesos)
+    : 0,
+
+  pesoMaximo: pesos.length
+    ? Math.max(...pesos)
+    : 0,
+
+};
+
   return {
-    encabezados,
-    filas,
-    mapeo,
-    animales,
-  };
+
+  encabezados,
+
+  filas,
+
+  mapeo,
+
+  animales,
+
+  resumen,
+
+};
 
 }

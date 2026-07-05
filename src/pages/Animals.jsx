@@ -15,7 +15,7 @@ import { exportarExcel } from "../utils/excel";
 import { exportarPDF } from "../utils/pdf";
 
 import { analizarExcel } from "../importador/importadorInteligente";
-
+import { importarIngreso } from "../services/procesos/importarIngresoService";
 import {
   Box,
   Button,
@@ -36,11 +36,12 @@ function Animals() {
   const [animalSeleccionado, setAnimalSeleccionado] = useState(null);
 
   const [previewExcel, setPreviewExcel] = useState({
-    encabezados: [],
-    filas: [],
-    mapeo: {},
-    animales: [],
-  });
+  encabezados: [],
+  filas: [],
+  mapeo: {},
+  animales: [],
+  resumen: {},
+});
 
   const inputFile = useRef();
 
@@ -92,14 +93,15 @@ function Animals() {
 
   async function confirmarImportacion() {
 
-    await agregarMuchosAnimales(previewExcel.animales);
+  await importarIngreso(previewExcel.animales);
 
-    setOpenImport(false);
+  setOpenImport(false);
 
-    cargarAnimales();
+  cargarAnimales();
 
-    alert(`${previewExcel.animales.length} animales importados.`);
-  }
+  alert(`${previewExcel.animales.length} animales importados correctamente.`);
+
+}
 
   const animalesFiltrados = animales.filter((animal) => {
 
@@ -204,6 +206,7 @@ function Animals() {
         encabezados={previewExcel.encabezados}
         filas={previewExcel.filas}
         mapeo={previewExcel.mapeo}
+        resumen={previewExcel.resumen}
         onImportar={confirmarImportacion}
       />
 

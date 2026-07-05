@@ -1,3 +1,4 @@
+import { detectarTipoEvento } from "../services/importadorEventosService";
 import {
   Dialog,
   DialogTitle,
@@ -13,6 +14,7 @@ import {
   Chip,
   Alert,
   Box,
+  Paper,
 } from "@mui/material";
 
 function ImportExcelDialog({
@@ -21,11 +23,14 @@ function ImportExcelDialog({
   encabezados = [],
   filas = [],
   mapeo = {},
+  resumen = {},
   onImportar,
 }) {
   const columnasDetectadas = Object.keys(mapeo).length;
   const totalColumnas = encabezados.length;
-
+const tipoEvento = detectarTipoEvento(
+  encabezados[0] || ""
+);
   return (
     <Dialog
       open={open}
@@ -40,6 +45,29 @@ function ImportExcelDialog({
       <DialogContent>
 
         <Alert severity="info" sx={{ mb: 3 }}>
+          <Paper sx={{ p: 2, mb: 3 }}>
+
+  <Typography variant="h6" gutterBottom>
+    📊 Resumen del archivo
+  </Typography>
+
+  <Typography>
+    🐄 Animales: <b>{resumen.cantidad || 0}</b>
+  </Typography>
+
+  <Typography>
+    ⚖️ Peso promedio: <b>{resumen.pesoPromedio || 0} kg</b>
+  </Typography>
+
+  <Typography>
+    ⬇ Peso mínimo: <b>{resumen.pesoMinimo || 0} kg</b>
+  </Typography>
+
+  <Typography>
+    ⬆ Peso máximo: <b>{resumen.pesoMaximo || 0} kg</b>
+  </Typography>
+
+</Paper>
           Se encontraron <b>{filas.length - 1}</b> registros.
         </Alert>
 
