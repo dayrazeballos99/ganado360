@@ -1,4 +1,5 @@
 import { detectarTipoEvento } from "../services/importadorEventosService";
+
 import {
   Dialog,
   DialogTitle,
@@ -16,6 +17,7 @@ import {
   Box,
   Paper,
 } from "@mui/material";
+import filtrarColumnas from "../importador/helpers/filtrarColumnas";
 
 function ImportExcelDialog({
   open,
@@ -31,6 +33,7 @@ function ImportExcelDialog({
 const tipoEvento = detectarTipoEvento(
   encabezados[0] || ""
 );
+const columnasVisibles = filtrarColumnas(encabezados);
   return (
     <Dialog
       open={open}
@@ -76,15 +79,24 @@ const tipoEvento = detectarTipoEvento(
         </Typography>
 
         <Box sx={{ mb: 3 }}>
-          {Object.entries(mapeo).map(([campo, indice]) => (
-            <Chip
-              key={campo}
-              color="success"
-              label={`${encabezados[indice]} → ${campo}`}
-              sx={{ mr: 1, mb: 1 }}
-            />
-          ))}
-        </Box>
+  {Object.entries(mapeo).map(([campo, indice]) => {
+
+    const columna = columnasVisibles.find(
+      (c) => c.indice === indice
+    );
+
+    if (!columna) return null;
+
+    return (
+      <Chip
+        key={campo}
+        color="success"
+        label={`${columna.nombre} → ${campo}`}
+        sx={{ mr: 1, mb: 1 }}
+      />
+    );
+  })}
+</Box>
 
         {columnasDetectadas < totalColumnas && (
           <Alert severity="warning" sx={{ mb: 3 }}>
@@ -103,9 +115,9 @@ const tipoEvento = detectarTipoEvento(
 
             <TableRow>
 
-              {encabezados.map((columna, index) => (
+              {columnasVisibles.map((columna, index) => (
                 <TableCell key={index}>
-                  <b>{columna}</b>
+                  <b>{columna.nombre}</b>
                 </TableCell>
               ))}
 

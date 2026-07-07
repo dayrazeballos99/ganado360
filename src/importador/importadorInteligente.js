@@ -1,3 +1,4 @@
+import limpiarEncabezados from "./helpers/limpiarEncabezados";
 import * as XLSX from "xlsx";
 import mapearColumnas from "./mapearColumnas";
 import convertirFilas from "./convertirFilas";
@@ -15,7 +16,11 @@ export async function analizarExcel(file) {
     defval: "",
   });
 
-  const encabezados = filas[0];
+  const encabezados = limpiarEncabezados(filas[0]);
+
+console.log("Encabezados RAW:", encabezados);
+console.log("Cantidad:", encabezados.length);
+console.table(encabezados);
 
   const mapeo = mapearColumnas(encabezados);
 
@@ -45,7 +50,10 @@ const resumen = {
     : 0,
 
 };
-
+console.log(animales.slice(0, 10));
+console.log("Encabezados:", encabezados);
+console.log("Mapeo:", mapeo);
+console.log("Primer animal:", animales[0]);
   return {
 
   encabezados,

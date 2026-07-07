@@ -22,7 +22,15 @@ export default function convertirFilas(filas, mapeo) {
 
       lote: fila[mapeo.lote] || "",
 
-      peso: fila[mapeo.peso] || "",
+      peso:
+  fila[mapeo.peso] !== undefined &&
+  fila[mapeo.peso] !== ""
+    ? Number(
+        String(fila[mapeo.peso])
+          .replace(",", ".")
+          .trim()
+      )
+    : null,
 
       estado: fila[mapeo.estado] || "Activo",
 

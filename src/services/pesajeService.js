@@ -31,9 +31,19 @@ export async function obtenerPesajes(animalId) {
 
 export async function agregarPesaje(animalId, pesaje) {
 
-  const referencia = collection(db, "animales", animalId, "pesajes");
+  const referencia = collection(
+    db,
+    "animales",
+    animalId,
+    "pesajes"
+  );
 
-  await addDoc(referencia, pesaje);
+  const documento = await addDoc(referencia, pesaje);
+
+  return {
+    id: documento.id,
+    ...pesaje,
+  };
 
 }
 
