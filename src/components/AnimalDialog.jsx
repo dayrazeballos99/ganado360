@@ -64,10 +64,10 @@ function AnimalDialog({
 
   async function guardar() {
 
-    if (!animal.rp || !animal.caravana) {
-      alert("RP y Caravana son obligatorios.");
-      return;
-    }
+    if (!animal.rp && !animal.caravana) {
+  alert("Debe ingresar al menos un identificador (RP o Caravana).");
+  return;
+}
 
     if (animal.id) {
 
@@ -108,7 +108,6 @@ function AnimalDialog({
                   <Grid item xs={6}>
             <TextField
               fullWidth
-              required
               label="RP"
               name="rp"
               value={animal.rp}
@@ -119,7 +118,6 @@ function AnimalDialog({
           <Grid item xs={6}>
             <TextField
               fullWidth
-              required
               label="Caravana"
               name="caravana"
               value={animal.caravana}

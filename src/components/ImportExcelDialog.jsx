@@ -16,6 +16,9 @@ import {
   Alert,
   Box,
   Paper,
+  FormControl,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import filtrarColumnas from "../importador/helpers/filtrarColumnas";
 
@@ -26,8 +29,13 @@ function ImportExcelDialog({
   filas = [],
   mapeo = {},
   resumen = {},
+  tipoArchivo = "",
   onImportar,
+  lotes = [],
+  loteSeleccionado,
+  setLoteSeleccionado,
 }) {
+
   const columnasDetectadas = Object.keys(mapeo).length;
   const totalColumnas = encabezados.length;
 const tipoEvento = detectarTipoEvento(
@@ -73,6 +81,45 @@ const columnasVisibles = filtrarColumnas(encabezados);
 </Paper>
           Se encontraron <b>{filas.length - 1}</b> registros.
         </Alert>
+        {tipoArchivo === "INGRESO" && (
+
+  <Paper sx={{ p: 2, mb: 3 }}>
+
+    <Typography variant="h6" gutterBottom>
+      📦 Lote de ingreso
+    </Typography>
+
+    <FormControl fullWidth>
+
+      <Select
+        value={loteSeleccionado}
+        onChange={(e) =>
+          setLoteSeleccionado(e.target.value)
+        }
+      >
+
+        <MenuItem value="">
+          Sin lote
+        </MenuItem>
+
+        {lotes.map((lote) => (
+
+          <MenuItem
+            key={lote.id}
+            value={lote.id}
+          >
+            {lote.nombre}
+          </MenuItem>
+
+        ))}
+
+      </Select>
+
+    </FormControl>
+
+  </Paper>
+
+)}
 
         <Typography variant="h6" gutterBottom>
           Columnas detectadas

@@ -4,6 +4,7 @@ import PasoArchivo from "./PasoArchivo";
 import PasoResumen from "./PasoResumen";
 import PasoImportando from "./PasoImportando";
 import PasoFinal from "./PasoFinal";
+import PasoAnalizando from "./PasoAnalizando";
 
 export default function ImportWizard() {
   const [paso, setPaso] = useState(1);
@@ -23,13 +24,12 @@ export default function ImportWizard() {
       );
 
     case 2:
-      return (
-        <PasoResumen
-          archivo={archivo}
-          siguiente={() => setPaso(3)}
-          volver={() => setPaso(1)}
-        />
-      );
+  return (
+    <PasoAnalizando
+      archivo={archivo}
+      finalizar={() => setPaso(3)}
+    />
+  );
 
     case 3:
       return (
@@ -37,7 +37,7 @@ export default function ImportWizard() {
           archivo={archivo}
           finalizar={(datos) => {
             setResultado(datos);
-            setPaso(4);
+            setPaso(5);
           }}
         />
       );

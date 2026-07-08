@@ -1,5 +1,8 @@
 import limpiarEncabezados from "./helpers/limpiarEncabezados";
+import detectarTipoArchivo from "../components/importador/detectarTipoArchivo";
+
 import * as XLSX from "xlsx";
+
 import mapearColumnas from "./mapearColumnas";
 import convertirFilas from "./convertirFilas";
 
@@ -9,7 +12,9 @@ export async function analizarExcel(file) {
 
   const workbook = XLSX.read(buffer);
 
-  const sheet = workbook.Sheets[workbook.SheetNames[0]];
+  const sheet = workbook.Sheets[
+    workbook.SheetNames[0]
+  ];
 
   const filas = XLSX.utils.sheet_to_json(sheet, {
     header: 1,
@@ -18,54 +23,68 @@ export async function analizarExcel(file) {
 
   const encabezados = limpiarEncabezados(filas[0]);
 
-console.log("Encabezados RAW:", encabezados);
-console.log("Cantidad:", encabezados.length);
-console.table(encabezados);
+  console.log("========== ENCABEZADOS ==========");
+  console.table(encabezados);
+
+  const tipoArchivo = detectarTipoArchivo(encabezados);
+
+  console.log("TIPO DETECTADO:", tipoArchivo);
 
   const mapeo = mapearColumnas(encabezados);
 
-  const animales = convertirFilas(filas, mapeo);
+  const animales = convertirFilas(
+    filas,
+    mapeo,
+    tipoArchivo
+  );
 
   const pesos = animales
-  .map((a) => Number(a.peso))
-  .filter((p) => !isNaN(p) && p > 0);
+    .map((a) => Number(a.peso))
+    .filter((p) => !isNaN(p) && p > 0);
 
-const resumen = {
+  const resumen = {
 
-  cantidad: animales.length,
+    cantidad: animales.length,
 
-  pesoPromedio: pesos.length
-    ? (
-        pesos.reduce((a, b) => a + b, 0) /
-        pesos.length
-      ).toFixed(1)
-    : 0,
+    pesoPromedio: pesos.length
+      ? (
+          pesos.reduce(
+            (a, b) => a + b,
+            0
+          ) / pesos.length
+        ).toFixed(1)
+      : 0,
 
-  pesoMinimo: pesos.length
-    ? Math.min(...pesos)
-    : 0,
+    pesoMinimo: pesos.length
+      ? Math.min(...pesos)
+      : 0,
 
-  pesoMaximo: pesos.length
-    ? Math.max(...pesos)
-    : 0,
+    pesoMaximo: pesos.length
+      ? Math.max(...pesos)
+      : 0,
 
-};
-console.log(animales.slice(0, 10));
-console.log("Encabezados:", encabezados);
-console.log("Mapeo:", mapeo);
-console.log("Primer animal:", animales[0]);
+  };
+
   return {
 
-  encabezados,
+    encabezados,
 
-  filas,
+    filas,
 
-  mapeo,
+    mapeo,
 
-  animales,
+    animales,
 
-  resumen,
+    resumen,
 
-};
+    tipoArchivo,
+
+    confianza: 100,
+
+    advertencias: [],
+
+    errores: [],
+
+  };
 
 }

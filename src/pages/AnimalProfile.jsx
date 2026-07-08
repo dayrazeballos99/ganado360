@@ -16,6 +16,20 @@ import {
   Tabs,
   Tab,
 } from "@mui/material";
+import {
+  obtenerLotes,
+} from "../services/loteService";
+
+import {
+  editarAnimal,
+} from "../services/animalService";
+
+import {
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+} from "@mui/material";
 
 function AnimalProfile() {
 
@@ -25,13 +39,19 @@ function AnimalProfile() {
 
   const [tab, setTab] = useState(0);
 
+  const [lotes, setLotes] = useState([]);
+
   useEffect(() => {
 
     async function cargarAnimal() {
 
       const datos = await obtenerAnimalPorId(id);
 
-      setAnimal(datos);
+setAnimal(datos);
+
+const listaLotes = await obtenerLotes();
+
+setLotes(listaLotes);
 
     }
 
@@ -100,7 +120,52 @@ function AnimalProfile() {
         <Typography><b>Raza:</b> {animal?.raza || "-"}</Typography>
         <Typography><b>Sexo:</b> {animal?.sexo || "-"}</Typography>
         <Typography><b>Categoría:</b> {animal?.categoria || "-"}</Typography>
-        <Typography><b>Lote:</b> {animal?.lote || "-"}</Typography>
+        <FormControl fullWidth sx={{ mt: 2 }}>
+
+  <InputLabel>Lote</InputLabel>
+
+  <Select
+    value={animal?.lote || ""}
+    label="Lote"
+    onChange={async (e) => {
+
+      const nuevoLoteId = e.target.value;
+
+const actualizado = {
+  ...animal,
+  loteId: nuevoLoteId,
+};
+
+setAnimal(actualizado);
+
+await editarAnimal(
+  animal.id,
+  {
+    loteId: nuevoLoteId,
+  }
+);
+
+    }}
+  >
+
+    <MenuItem value="">
+      Sin lote
+    </MenuItem>
+
+    {lotes.map((lote) => (
+
+      <MenuItem
+  key={lote.id}
+  value={lote.id}
+>
+  {lote.nombre}
+</MenuItem>
+
+    ))}
+
+  </Select>
+
+</FormControl>
         <Typography><b>Peso:</b> {animal?.peso || "-"} kg</Typography>
 
       </Paper>

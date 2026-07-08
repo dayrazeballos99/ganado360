@@ -32,9 +32,6 @@ export async function agregarAnimal(animal) {
 
 export async function agregarMuchosAnimales(animales) {
 
-  console.log("Primer animal a guardar:", animales[0]);
-  console.log("Tipo del peso:", typeof animales[0].peso);
-
   const creados = [];
 
   for (const animal of animales) {
@@ -52,13 +49,19 @@ export async function agregarMuchosAnimales(animales) {
 }
 
 export async function editarAnimal(id, animal) {
+
   const referencia = doc(db, "animales", id);
+
   await updateDoc(referencia, animal);
+
 }
 
 export async function eliminarAnimal(id) {
+
   const referencia = doc(db, "animales", id);
+
   await deleteDoc(referencia);
+
 }
 
 export async function obtenerAnimalPorId(id) {
@@ -75,5 +78,39 @@ export async function obtenerAnimalPorId(id) {
     id: documento.id,
     ...documento.data(),
   };
+
+}
+
+// ===========================================
+// NUEVAS FUNCIONES
+// ===========================================
+
+export async function obtenerAnimalPorCaravana(caravana) {
+
+  const animales = await obtenerAnimales();
+
+  return animales.find(
+    (animal) => animal.caravana === caravana
+  ) || null;
+
+}
+
+export async function obtenerAnimalPorRP(rp) {
+
+  const animales = await obtenerAnimales();
+
+  return animales.find(
+    (animal) => animal.rp === rp
+  ) || null;
+
+}
+
+export async function actualizarPesoActual(id, peso) {
+
+  const referencia = doc(db, "animales", id);
+
+  await updateDoc(referencia, {
+    peso,
+  });
 
 }

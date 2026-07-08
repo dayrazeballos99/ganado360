@@ -12,21 +12,32 @@ function AnimalTable({
   onView,
 }) {
   const navigate = useNavigate();
+
   const columnas = [
     {
       field: "rp",
-      headerName: "RP",
-      width: 90,
+      headerName: "RP Electrónico",
+      width: 220,
+      renderCell: (params) => (
+        <span
+          style={{
+            fontFamily: "monospace",
+            fontWeight: 600,
+          }}
+        >
+          {params.value}
+        </span>
+      ),
     },
     {
       field: "caravana",
       headerName: "Caravana",
-      width: 130,
+      width: 140,
     },
     {
       field: "nombre",
       headerName: "Nombre",
-      width: 170,
+      width: 180,
     },
     {
       field: "raza",
@@ -36,17 +47,17 @@ function AnimalTable({
     {
       field: "sexo",
       headerName: "Sexo",
-      width: 110,
+      width: 100,
     },
     {
       field: "categoria",
       headerName: "Categoría",
-      width: 130,
+      width: 140,
     },
     {
       field: "peso",
       headerName: "Peso",
-      width: 100,
+      width: 110,
       renderCell: (params) =>
         params.value ? `${params.value} kg` : "",
     },
@@ -66,7 +77,9 @@ function AnimalTable({
           <Tooltip title="Ver ficha">
             <IconButton
               color="info"
-              onClick={() => navigate(`/animal/${params.row.id}`)}
+              onClick={() =>
+                navigate(`/animal/${params.row.id}`)
+              }
             >
               <VisibilityIcon />
             </IconButton>
@@ -95,7 +108,7 @@ function AnimalTable({
   ];
 
   return (
-    <div style={{ height: 600, width: "100%" }}>
+    <div style={{ height: 650, width: "100%" }}>
       <DataGrid
         rows={animales}
         columns={columnas}

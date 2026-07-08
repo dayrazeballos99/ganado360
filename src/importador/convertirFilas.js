@@ -1,43 +1,97 @@
-export default function convertirFilas(filas, mapeo) {
+export default function convertirFilas(
+  filas,
+  mapeo,
+  tipoArchivo = "INGRESO"
+) {
 
-  const animales = [];
+  const datos = [];
 
   for (let i = 1; i < filas.length; i++) {
 
     const fila = filas[i];
 
-    animales.push({
+    switch (tipoArchivo) {
 
-      rp: fila[mapeo.rp] || "",
+      // ==================================
+      // INGRESO DE ANIMALES
+      // ==================================
 
-      caravana: fila[mapeo.caravana] || "",
+      case "INGRESO":
 
-      nombre: fila[mapeo.nombre] || "",
+        datos.push({
 
-      raza: fila[mapeo.raza] || "",
+          rp: fila[mapeo.rp] || "",
 
-      sexo: fila[mapeo.sexo] || "",
+          caravana: fila[mapeo.caravana] || "",
 
-      categoria: fila[mapeo.categoria] || "",
+          nombre: fila[mapeo.nombre] || "",
 
-      lote: fila[mapeo.lote] || "",
+          raza: fila[mapeo.raza] || "",
 
-      peso:
-  fila[mapeo.peso] !== undefined &&
-  fila[mapeo.peso] !== ""
-    ? Number(
-        String(fila[mapeo.peso])
-          .replace(",", ".")
-          .trim()
-      )
-    : null,
+          sexo: fila[mapeo.sexo] || "",
 
-      estado: fila[mapeo.estado] || "Activo",
+          categoria: fila[mapeo.categoria] || "",
 
-    });
+          loteId: "",
+
+          peso:
+            fila[mapeo.peso] !== undefined &&
+            fila[mapeo.peso] !== ""
+              ? Number(
+                  String(fila[mapeo.peso])
+                    .replace(",", ".")
+                    .trim()
+                )
+              : null,
+
+          estado:
+            fila[mapeo.estado] || "Activo",
+
+        });
+
+        break;
+
+      // ==================================
+      // PESAJES
+      // ==================================
+
+      case "PESAJES":
+
+        datos.push({
+
+          rp: fila[mapeo.rp] || "",
+
+          caravana:
+            fila[mapeo.caravana] || "",
+
+          fecha:
+            fila[mapeo.fecha] || "",
+
+          hora:
+            fila[mapeo.hora] || "",
+
+          peso:
+            fila[mapeo.peso] !== undefined &&
+            fila[mapeo.peso] !== ""
+              ? Number(
+                  String(fila[mapeo.peso])
+                    .replace(",", ".")
+                    .trim()
+                )
+              : null,
+
+        });
+
+        break;
+
+      default:
+
+        break;
+
+    }
 
   }
 
-  return animales;
+  return datos;
 
 }
