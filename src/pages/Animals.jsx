@@ -16,6 +16,8 @@ import { exportarPDF } from "../utils/pdf";
 import { analizarExcel } from "../importador/importadorInteligente";
 import { importarIngreso } from "../services/procesos/importarIngresoService";
 import { importarPesajes } from "../services/procesos/importarPesajesService";
+import { importarSanidad } from "../services/procesos/importarSanidadService";
+
 
 import {
   Box,
@@ -102,50 +104,65 @@ function Animals() {
   }
 
   async function confirmarImportacion() {
-    try {
-      if (previewExcel.tipoArchivo === "INGRESO") {
-        await importarIngreso(
-          previewExcel.animales,
-          loteSeleccionado
-        );
 
-        alert(
-          `${previewExcel.animales.length} animales importados correctamente.`
-        );
+  try {
 
-      } else if (previewExcel.tipoArchivo === "PESAJES") {
+    if (previewExcel.tipoArchivo === "INGRESO") {
 
-        const resultado = await importarPesajes(
-          previewExcel.animales
-        );
+      await importarIngreso(
+        previewExcel.animales,
+        loteSeleccionado
+      );
 
-        alert(
-          `Pesajes importados: ${resultado.importados}
+      alert(
+        `${previewExcel.animales.length} animales importados correctamente.`
+      );
+
+    } else if (previewExcel.tipoArchivo === "PESAJES") {
+
+      const resultado = await importarPesajes(
+        previewExcel.animales
+      );
+
+      alert(
+`Pesajes importados: ${resultado.importados}
 No encontrados: ${resultado.noEncontrados}`
-        );
+      );
 
-      } else {
+    } else if (previewExcel.tipoArchivo === "SANIDAD") {
 
-        alert(
-          `Tipo de archivo "${previewExcel.tipoArchivo}" todavía no soportado.`
-        );
+      const resultado = await importarSanidad(
+        previewExcel.animales
+      );
 
-        return;
+      alert(
+`Tratamientos importados: ${resultado.importados}
+No encontrados: ${resultado.noEncontrados}`
+      );
 
-      }
+    } else {
 
-      setOpenImport(false);
-      setLoteSeleccionado("");
+      alert(
+        `Tipo de archivo "${previewExcel.tipoArchivo}" todavía no soportado.`
+      );
 
-      cargarAnimales();
-
-    } catch (error) {
-
-      console.error(error);
-
-      alert(error.message);
+      return;
 
     }
+
+    setOpenImport(false);
+    setLoteSeleccionado("");
+
+    cargarAnimales();
+
+  } catch (error) {
+
+    console.error(error);
+
+    alert(error.message);
+
+  }
+
   }
 
   const animalesFiltrados = animales.filter((animal) => {

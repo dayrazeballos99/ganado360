@@ -46,6 +46,7 @@ export async function agregarMuchosAnimales(animales) {
   }
 
   return creados;
+
 }
 
 export async function editarAnimal(id, animal) {
@@ -89,9 +90,14 @@ export async function obtenerAnimalPorCaravana(caravana) {
 
   const animales = await obtenerAnimales();
 
-  return animales.find(
-    (animal) => animal.caravana === caravana
-  ) || null;
+  const caravanaBuscada = String(caravana).trim();
+
+  return (
+    animales.find(
+      (animal) =>
+        String(animal.caravana || "").trim() === caravanaBuscada
+    ) || null
+  );
 
 }
 
@@ -99,9 +105,21 @@ export async function obtenerAnimalPorRP(rp) {
 
   const animales = await obtenerAnimales();
 
-  return animales.find(
-    (animal) => animal.rp === rp
-  ) || null;
+  const rpBuscado = String(rp)
+    .trim()
+    .replace(/^0+/, "");
+
+  return (
+    animales.find((animal) => {
+
+      const rpAnimal = String(animal.rp || "")
+        .trim()
+        .replace(/^0+/, "");
+
+      return rpAnimal === rpBuscado;
+
+    }) || null
+  );
 
 }
 

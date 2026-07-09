@@ -1,5 +1,5 @@
 import limpiarEncabezados from "./helpers/limpiarEncabezados";
-import detectarTipoArchivo from "../components/importador/detectarTipoArchivo";
+import detectarTipoArchivo from "./detectarTipoArchivo";
 
 import * as XLSX from "xlsx";
 
@@ -27,7 +27,7 @@ export async function analizarExcel(file) {
   console.table(encabezados);
 
   const tipoArchivo = detectarTipoArchivo(encabezados);
-
+console.log("ENCABEZADOS:", encabezados);
   console.log("TIPO DETECTADO:", tipoArchivo);
 
   const mapeo = mapearColumnas(encabezados);

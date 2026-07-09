@@ -84,6 +84,46 @@ export default function convertirFilas(
 
         break;
 
+      // ==================================
+      // SANIDAD
+      // ==================================
+
+      case "SANIDAD":
+
+        datos.push({
+
+          rp: fila[mapeo.rp] || "",
+
+          fecha: fila[mapeo.fecha] || "",
+
+          tipo: fila[mapeo.tipo] || "",
+
+          producto: fila[mapeo.producto] || "",
+
+          laboratorio: fila[mapeo.laboratorio] || "",
+
+          dosis: fila[mapeo.dosis] || "",
+
+          unidad: fila[mapeo.unidad] || "ml",
+
+          via: fila[mapeo.via] || "",
+
+          responsable: fila[mapeo.responsable] || "",
+
+          veterinario: fila[mapeo.veterinario] || "",
+
+          diagnostico: fila[mapeo.diagnostico] || "",
+
+          proximaDosis: fila[mapeo.proximaDosis] || "",
+
+          retiro: fila[mapeo.retiro] || "",
+
+          observaciones: fila[mapeo.observaciones] || "",
+
+        });
+
+        break;
+
       default:
 
         break;
