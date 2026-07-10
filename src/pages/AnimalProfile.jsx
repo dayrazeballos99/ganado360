@@ -8,6 +8,7 @@ import AnimalHeader from "../components/animal/AnimalHeader";
 import AnimalSummary from "../components/animal/AnimalSummary";
 
 import { obtenerAnimalPorId } from "../services/animalService";
+import MovimientosTab from "../components/animal/tabs/MovimientosTab";
 
 import {
   Paper,
@@ -205,8 +206,9 @@ await editarAnimal(
 )}
 
 {tab === 5 && (
-  <Typography>Próximamente Movimientos.</Typography>
+  <MovimientosTab animal={animal} />
 )}
+
 {tab === 6 && (
   <Typography>
     Próximamente Historial.
