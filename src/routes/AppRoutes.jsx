@@ -9,6 +9,7 @@ import Movements from "../pages/Movements";
 import Eventos from "../pages/Eventos";
 import Lotes from "../pages/Lotes";
 import LoteProfile from "../pages/LoteProfile";
+import Importaciones from "../pages/Importaciones";
 
 function AppRoutes() {
   return (
@@ -64,7 +65,10 @@ function AppRoutes() {
           path="/lote/:id"
           element={<LoteProfile />}
         />
-
+        <Route
+          path="/importaciones"
+          element={<Importaciones />}
+        />
       </Routes>
     </BrowserRouter>
   );

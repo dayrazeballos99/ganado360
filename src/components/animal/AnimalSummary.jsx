@@ -10,7 +10,7 @@ function AnimalSummary({ animal }) {
 
     <Grid container spacing={2} sx={{ mb:3 }}>
 
-      <Grid item xs={12} md={3}>
+      <Grid size={{ xs: 12, md: 3 }}>
         <Paper sx={{ p:2 }}>
 
           <Typography variant="body2" color="text.secondary">
@@ -28,7 +28,7 @@ function AnimalSummary({ animal }) {
         </Paper>
       </Grid>
 
-      <Grid item xs={12} md={3}>
+      <Grid size={{ xs: 12, md: 3 }}>
         <Paper sx={{ p:2 }}>
 
           <Typography variant="body2" color="text.secondary">
@@ -42,7 +42,7 @@ function AnimalSummary({ animal }) {
         </Paper>
       </Grid>
 
-      <Grid item xs={12} md={3}>
+      <Grid size={{ xs: 12, md: 3 }}>
         <Paper sx={{ p:2 }}>
 
           <Typography variant="body2" color="text.secondary">
@@ -56,7 +56,7 @@ function AnimalSummary({ animal }) {
         </Paper>
       </Grid>
 
-      <Grid item xs={12} md={3}>
+      <Grid size={{ xs: 12, md: 3 }}>
         <Paper sx={{ p:2 }}>
 
           <Typography variant="body2" color="text.secondary">

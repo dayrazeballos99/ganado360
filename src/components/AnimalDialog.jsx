@@ -105,7 +105,7 @@ function AnimalDialog({
       <DialogContent>
 
         <Grid container spacing={2} sx={{ mt: 1 }}>
-                  <Grid item xs={6}>
+          <Grid size={{ xs: 6 }}>
             <TextField
               fullWidth
               label="RP"
@@ -115,7 +115,7 @@ function AnimalDialog({
             />
           </Grid>
 
-          <Grid item xs={6}>
+          <Grid size={{ xs: 6 }}>
             <TextField
               fullWidth
               label="Caravana"
@@ -125,7 +125,7 @@ function AnimalDialog({
             />
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid size={{ xs: 12 }}>
             <TextField
               fullWidth
               label="Nombre"
@@ -135,7 +135,7 @@ function AnimalDialog({
             />
           </Grid>
 
-          <Grid item xs={6}>
+          <Grid size={{ xs: 6 }}>
             <TextField
               select
               fullWidth
@@ -152,7 +152,7 @@ function AnimalDialog({
             </TextField>
           </Grid>
 
-          <Grid item xs={6}>
+          <Grid size={{ xs: 6 }}>
             <TextField
               select
               fullWidth
@@ -169,7 +169,7 @@ function AnimalDialog({
             </TextField>
           </Grid>
 
-          <Grid item xs={6}>
+          <Grid size={{ xs: 6 }}>
             <TextField
               select
               fullWidth
@@ -186,7 +186,7 @@ function AnimalDialog({
             </TextField>
           </Grid>
 
-          <Grid item xs={6}>
+          <Grid size={{ xs: 6 }}>
             <TextField
               select
               fullWidth
@@ -203,7 +203,7 @@ function AnimalDialog({
             </TextField>
           </Grid>
 
-          <Grid item xs={6}>
+          <Grid size={{ xs: 6 }}>
             <TextField
               fullWidth
               type="date"
@@ -215,7 +215,7 @@ function AnimalDialog({
             />
           </Grid>
 
-          <Grid item xs={6}>
+          <Grid size={{ xs: 6 }}>
             <TextField
               fullWidth
               label="Lote"
@@ -225,7 +225,7 @@ function AnimalDialog({
             />
           </Grid>
 
-          <Grid item xs={6}>
+          <Grid size={{ xs: 6 }}>
             <TextField
               fullWidth
               type="number"
@@ -236,7 +236,7 @@ function AnimalDialog({
             />
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid size={{ xs: 12 }}>
             <TextField
               fullWidth
               multiline

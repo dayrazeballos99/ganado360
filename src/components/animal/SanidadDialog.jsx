@@ -87,7 +87,7 @@ function SanidadDialog({
 
         <Grid container spacing={2} sx={{ mt: 1 }}>
 
-  <Grid item xs={12} md={6}>
+  <Grid size={{ xs: 12, md: 6 }}>
     <TextField
       fullWidth
       type="date"
@@ -99,7 +99,7 @@ function SanidadDialog({
     />
   </Grid>
 
-  <Grid item xs={12} md={6}>
+  <Grid size={{ xs: 12, md: 6 }}>
     <TextField
       select
       fullWidth
@@ -116,7 +116,7 @@ function SanidadDialog({
     </TextField>
   </Grid>
 
-  <Grid item xs={12} md={6}>
+  <Grid size={{ xs: 12, md: 6 }}>
     <TextField
       fullWidth
       label="Producto"
@@ -126,7 +126,7 @@ function SanidadDialog({
     />
   </Grid>
 
-  <Grid item xs={12} md={6}>
+  <Grid size={{ xs: 12, md: 6 }}>
     <TextField
       fullWidth
       label="Laboratorio"
@@ -136,7 +136,7 @@ function SanidadDialog({
     />
   </Grid>
 
-  <Grid item xs={6} md={3}>
+  <Grid size={{ xs: 6, md: 3 }}>
     <TextField
       fullWidth
       type="number"
@@ -147,7 +147,7 @@ function SanidadDialog({
     />
   </Grid>
 
-  <Grid item xs={6} md={3}>
+  <Grid size={{ xs: 6, md: 3 }}>
     <TextField
       fullWidth
       label="Unidad"
@@ -157,7 +157,7 @@ function SanidadDialog({
     />
   </Grid>
 
-  <Grid item xs={12} md={6}>
+  <Grid size={{ xs: 12, md: 6 }}>
     <TextField
       select
       fullWidth
@@ -174,7 +174,7 @@ function SanidadDialog({
     </TextField>
   </Grid>
 
-  <Grid item xs={12} md={6}>
+  <Grid size={{ xs: 12, md: 6 }}>
     <TextField
       fullWidth
       label="Veterinario"
@@ -184,7 +184,7 @@ function SanidadDialog({
     />
   </Grid>
 
-  <Grid item xs={12} md={6}>
+  <Grid size={{ xs: 12, md: 6 }}>
     <TextField
       fullWidth
       label="Responsable"
@@ -194,7 +194,7 @@ function SanidadDialog({
     />
   </Grid>
 
-  <Grid item xs={12}>
+  <Grid size={{ xs: 12 }}>
     <TextField
       fullWidth
       label="Diagnóstico"
@@ -204,7 +204,7 @@ function SanidadDialog({
     />
   </Grid>
 
-  <Grid item xs={12} md={6}>
+  <Grid size={{ xs: 12, md: 6 }}>
     <TextField
       fullWidth
       type="date"
@@ -216,7 +216,7 @@ function SanidadDialog({
     />
   </Grid>
 
-  <Grid item xs={12} md={6}>
+  <Grid size={{ xs: 12, md: 6 }}>
     <TextField
       fullWidth
       label="Período de retiro"
@@ -227,7 +227,7 @@ function SanidadDialog({
     />
   </Grid>
 
-  <Grid item xs={12}>
+  <Grid size={{ xs: 12 }}>
     <TextField
       fullWidth
       multiline

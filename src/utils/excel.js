@@ -1,4 +1,5 @@
 import * as XLSX from "xlsx";
+import { detectarColumnas } from "../importador/detectarColumnas";
 
 export function exportarExcel(animales) {
   const datos = animales.map((a) => ({
@@ -13,7 +14,6 @@ export function exportarExcel(animales) {
   }));
 
   const hoja = XLSX.utils.json_to_sheet(datos);
-
   const libro = XLSX.utils.book_new();
 
   XLSX.utils.book_append_sheet(libro, hoja, "Animales");
@@ -28,13 +28,22 @@ export function importarExcel(file) {
     reader.onload = (e) => {
       const data = new Uint8Array(e.target.result);
 
-      const workbook = XLSX.read(data, { type: "array" });
+      const workbook = XLSX.read(data, {
+        type: "array",
+      });
 
-      const sheet = workbook.Sheets[workbook.SheetNames[0]];
+      const hoja = workbook.Sheets[workbook.SheetNames[0]];
 
-      const json = XLSX.utils.sheet_to_json(sheet);
+      const datos = XLSX.utils.sheet_to_json(hoja);
 
-      resolve(json);
+      const columnas = detectarColumnas(
+        Object.keys(datos[0] || {})
+      );
+
+      resolve({
+        datos,
+        columnas,
+      });
     };
 
     reader.readAsArrayBuffer(file);

@@ -24,3 +24,14 @@ export async function agregarLote(lote) {
   await addDoc(lotesRef, lote);
 
 }
+export async function obtenerLotePorId(id) {
+
+  const lotes = await obtenerLotes();
+
+  return (
+    lotes.find(
+      (lote) => lote.id === id
+    ) || null
+  );
+
+}

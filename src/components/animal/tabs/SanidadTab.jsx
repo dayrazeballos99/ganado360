@@ -253,49 +253,49 @@ function SanidadTab({ animal }) {
 
           <Grid container spacing={2}>
 
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <Typography>
                 <b>Producto:</b> {tratamientoSeleccionado.producto || "-"}
               </Typography>
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <Typography>
                 <b>Laboratorio:</b> {tratamientoSeleccionado.laboratorio || "-"}
               </Typography>
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <Typography>
                 <b>Veterinario:</b> {tratamientoSeleccionado.veterinario || "-"}
               </Typography>
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <Typography>
                 <b>Responsable:</b> {tratamientoSeleccionado.responsable || "-"}
               </Typography>
             </Grid>
 
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <Typography>
                 <b>Diagnóstico:</b> {tratamientoSeleccionado.diagnostico || "-"}
               </Typography>
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <Typography>
                 <b>Próxima dosis:</b> {tratamientoSeleccionado.proximaDosis || "-"}
               </Typography>
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <Typography>
                 <b>Período de retiro:</b> {tratamientoSeleccionado.retiro || "-"}
               </Typography>
             </Grid>
 
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <Typography>
                 <b>Observaciones:</b>
               </Typography>

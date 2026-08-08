@@ -63,19 +63,19 @@ export default function LoteProfile() {
 
         <Grid container spacing={3}>
 
-          <Grid item xs={12} md={4}>
+          <Grid size={{ xs: 12, md: 4 }}>
             <Typography>
               <b>Tipo:</b> {lote.tipo}
             </Typography>
           </Grid>
 
-          <Grid item xs={12} md={4}>
+          <Grid size={{ xs: 12, md: 4 }}>
             <Typography>
               <b>Estado:</b> {lote.estado}
             </Typography>
           </Grid>
 
-          <Grid item xs={12} md={4}>
+          <Grid size={{ xs: 12, md: 4 }}>
             <Typography>
               <b>Capacidad:</b> {lote.capacidad}
             </Typography>
@@ -112,7 +112,7 @@ export default function LoteProfile() {
 
           <Grid container spacing={3}>
 
-            <Grid item xs={12} md={3}>
+            <Grid size={{ xs: 12, md: 3 }}>
               <Paper sx={{ p:2 }}>
                 <Typography variant="body2">
                   🐄 Animales
@@ -124,7 +124,7 @@ export default function LoteProfile() {
               </Paper>
             </Grid>
 
-            <Grid item xs={12} md={3}>
+            <Grid size={{ xs: 12, md: 3 }}>
               <Paper sx={{ p:2 }}>
                 <Typography variant="body2">
                   ⚖️ Peso promedio
@@ -136,7 +136,7 @@ export default function LoteProfile() {
               </Paper>
             </Grid>
 
-            <Grid item xs={12} md={3}>
+            <Grid size={{ xs: 12, md: 3 }}>
               <Paper sx={{ p:2 }}>
                 <Typography variant="body2">
                   🏋️ Peso total
@@ -148,7 +148,7 @@ export default function LoteProfile() {
               </Paper>
             </Grid>
 
-            <Grid item xs={12} md={3}>
+            <Grid size={{ xs: 12, md: 3 }}>
               <Paper sx={{ p:2 }}>
                 <Typography variant="body2">
                   📈 GMD

@@ -10,6 +10,8 @@ import {
   TextField,
   MenuItem,
 } from "@mui/material";
+import AnimalAutocomplete from "./AnimalAutocomplete";
+import { obtenerLotes } from "../services/loteService";
 
 const tiposMovimiento = [
   "Ingreso",
@@ -25,6 +27,7 @@ function MovimientoDialog({
   onClose,
   onGuardar,
   movimientoInicial,
+  mostrarAnimal = false,
 }) {
 
   const [movimiento, setMovimiento] = useState({
@@ -34,24 +37,34 @@ function MovimientoDialog({
     destino: "",
     observaciones: "",
   });
-
+const [animalSeleccionado, setAnimalSeleccionado] = useState(null);
+const [lotes, setLotes] = useState([]);
   useEffect(() => {
 
+obtenerLotes().then(setLotes);
+
     if (movimientoInicial) {
+  setMovimiento({
+    fecha: movimientoInicial.fecha || "",
+    tipo: movimientoInicial.tipo || "",
+    origen: movimientoInicial.origen || "",
+    destino: movimientoInicial.destino || "",
+    observaciones: movimientoInicial.observaciones || "",
+  });
 
-      setMovimiento(movimientoInicial);
+} else {
 
-    } else {
+  setMovimiento({
+    fecha: "",
+    tipo: "",
+    origen: "",
+    destino: "",
+    observaciones: "",
+  });
 
-      setMovimiento({
-        fecha: "",
-        tipo: "",
-        origen: "",
-        destino: "",
-        observaciones: "",
-      });
+  setAnimalSeleccionado(null);
 
-    }
+}
 
   }, [movimientoInicial, open]);
 
@@ -66,17 +79,22 @@ function MovimientoDialog({
 
   function guardar() {
 
-    if (!movimiento.fecha || !movimiento.tipo) {
-
-      alert("La fecha y el tipo son obligatorios.");
-
-      return;
-
-    }
-
-    onGuardar(movimiento);
-
+  if (!movimiento.fecha || !movimiento.tipo) {
+    alert("La fecha y el tipo son obligatorios.");
+    return;
   }
+
+  if (mostrarAnimal && !animalSeleccionado) {
+    alert("Debe seleccionar un animal.");
+    return;
+  }
+
+  onGuardar({
+    animal: animalSeleccionado,
+    movimiento,
+  });
+
+}
 
   return (
 
@@ -99,19 +117,27 @@ function MovimientoDialog({
   sx={{ mt: 1 }}
 >
 
-          <Grid size={12}>
+  {mostrarAnimal && (
+    <Grid size={12}>
+      <AnimalAutocomplete
+        value={animalSeleccionado}
+        onChange={setAnimalSeleccionado}
+        label="Animal"
+      />
+    </Grid>
+  )}
 
-            <TextField
-              fullWidth
-              type="date"
-              label="Fecha"
-              name="fecha"
-              value={movimiento.fecha}
-              onChange={cambiar}
-              InputLabelProps={{ shrink: true }}
-            />
-
-          </Grid>
+  <Grid size={12}>
+    <TextField
+      fullWidth
+      type="date"
+      label="Fecha"
+      name="fecha"
+      value={movimiento.fecha}
+      onChange={cambiar}
+      InputLabelProps={{ shrink: true }}
+    />
+  </Grid>
 
           <Grid size={12}>
 
@@ -151,17 +177,47 @@ function MovimientoDialog({
 
           </Grid>
 
-          <Grid size={12}>
+          {movimiento.tipo === "Cambio de lote" ? (
 
-            <TextField
-              fullWidth
-              label="Destino"
-              name="destino"
-              value={movimiento.destino}
-              onChange={cambiar}
-            />
+  <Grid size={12}>
 
-          </Grid>
+    <TextField
+      select
+      fullWidth
+      label="Lote destino"
+      name="destino"
+      value={movimiento.destino}
+      onChange={cambiar}
+    >
+
+      {lotes.map((lote) => (
+        <MenuItem
+          key={lote.id}
+          value={lote.id}
+        >
+          {lote.nombre}
+        </MenuItem>
+      ))}
+
+    </TextField>
+
+  </Grid>
+
+) : (
+
+  <Grid size={12}>
+
+    <TextField
+      fullWidth
+      label="Destino"
+      name="destino"
+      value={movimiento.destino}
+      onChange={cambiar}
+    />
+
+  </Grid>
+
+)}
 
           <Grid size={12}>
 

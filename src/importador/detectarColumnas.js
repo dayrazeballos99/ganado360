@@ -9,6 +9,17 @@ const diccionario = {
     "identificación",
   ],
 
+  identificador: [
+   "ide",
+   "idv",
+   "eid",
+   "rfid",
+   "chip",
+   "identificador",
+   "identificador electronico",
+   "identificación electrónica"
+],
+
   caravana: [
     "caravana",
     "caravana nro",
@@ -147,3 +158,29 @@ const diccionario = {
 };
 
 export default diccionario;
+function normalizar(texto) {
+  return String(texto)
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim();
+}
+
+export function detectarColumnas(encabezados) {
+  const resultado = {};
+
+  encabezados.forEach((columna) => {
+    const nombre = normalizar(columna);
+
+    for (const campo in diccionario) {
+      const sinonimos = diccionario[campo].map(normalizar);
+
+      if (sinonimos.includes(nombre)) {
+        resultado[campo] = columna;
+        break;
+      }
+    }
+  });
+
+  return resultado;
+}

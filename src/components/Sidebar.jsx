@@ -16,6 +16,7 @@ import AgricultureIcon from "@mui/icons-material/Agriculture";
 import AssessmentIcon from "@mui/icons-material/Assessment";
 import SettingsIcon from "@mui/icons-material/Settings";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
+import UploadFileIcon from "@mui/icons-material/UploadFile";
 
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -32,16 +33,12 @@ const menu = [
     icono: <PetsIcon />,
     ruta: "/animales",
   },
-  {
-    texto: "Pesajes",
-    icono: <ScaleIcon />,
-    ruta: "/pesajes",
-  },
-  {
-    texto: "Sanidad",
-    icono: <VaccinesIcon />,
-    ruta: "/sanidad",
-  },
+  
+    {
+  texto: "Eventos",
+  icono: <VaccinesIcon />,
+  ruta: "/eventos",
+},
   {
   texto: "Movimientos",
   icono: <LocalShippingIcon />,
@@ -53,15 +50,21 @@ const menu = [
     ruta: "/lotes",
   },
   {
-    texto: "Reportes",
-    icono: <AssessmentIcon />,
-    ruta: "/reportes",
-  },
-  {
-    texto: "Configuración",
-    icono: <SettingsIcon />,
-    ruta: "/configuracion",
-  },
+  texto: "Importaciones",
+  icono: <UploadFileIcon />,
+  ruta: "/importaciones",
+},
+  // {
+//   texto: "Reportes",
+//   icono: <AssessmentIcon />,
+//   ruta: "/reportes",
+// },
+
+// {
+//   texto: "Configuración",
+//   icono: <SettingsIcon />,
+//   ruta: "/configuracion",
+// },
 ];
 
 function Sidebar() {

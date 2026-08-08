@@ -81,3 +81,35 @@ export async function eliminarMovimiento(
   await deleteDoc(referencia);
 
 }
+
+ export async function obtenerTodosLosMovimientos() {
+
+  const animalesSnapshot = await getDocs(
+    collection(db, "animales")
+  );
+
+  const movimientos = [];
+
+  for (const animal of animalesSnapshot.docs) {
+
+    const movimientosSnapshot = await getDocs(
+      collection(db, "animales", animal.id, "movimientos")
+    );
+
+    movimientosSnapshot.forEach((documento) => {
+
+      movimientos.push({
+        id: documento.id,
+        animalId: animal.id,
+        rp: animal.data().rp || "",
+        nombre: animal.data().nombre || "",
+        ...documento.data(),
+      });
+
+    });
+
+  }
+
+  return movimientos;
+
+}

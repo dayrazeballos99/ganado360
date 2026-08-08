@@ -13,7 +13,12 @@ import {
 
 export async function obtenerPesajes(animalId) {
 
-  const referencia = collection(db, "animales", animalId, "pesajes");
+  const referencia = collection(
+    db,
+    "animales",
+    animalId,
+    "pesajes"
+  );
 
   const consulta = query(
     referencia,
@@ -29,7 +34,10 @@ export async function obtenerPesajes(animalId) {
 
 }
 
-export async function agregarPesaje(animalId, pesaje) {
+export async function agregarPesaje(
+  animalId,
+  pesaje
+) {
 
   const referencia = collection(
     db,
@@ -38,7 +46,10 @@ export async function agregarPesaje(animalId, pesaje) {
     "pesajes"
   );
 
-  const documento = await addDoc(referencia, pesaje);
+  const documento = await addDoc(
+    referencia,
+    pesaje
+  );
 
   return {
     id: documento.id,
@@ -47,7 +58,11 @@ export async function agregarPesaje(animalId, pesaje) {
 
 }
 
-export async function editarPesaje(animalId, pesajeId, pesaje) {
+export async function editarPesaje(
+  animalId,
+  pesajeId,
+  pesaje
+) {
 
   const referencia = doc(
     db,
@@ -57,11 +72,17 @@ export async function editarPesaje(animalId, pesajeId, pesaje) {
     pesajeId
   );
 
-  await updateDoc(referencia, pesaje);
+  await updateDoc(
+    referencia,
+    pesaje
+  );
 
 }
 
-export async function eliminarPesaje(animalId, pesajeId) {
+export async function eliminarPesaje(
+  animalId,
+  pesajeId
+) {
 
   const referencia = doc(
     db,
@@ -72,5 +93,25 @@ export async function eliminarPesaje(animalId, pesajeId) {
   );
 
   await deleteDoc(referencia);
+
+}
+
+export async function existePesaje(
+  animalId,
+  fecha,
+  peso
+) {
+
+  const pesajes =
+    await obtenerPesajes(animalId);
+
+  return pesajes.some((pesaje) => {
+
+    return (
+      String(pesaje.fecha) === String(fecha) &&
+      Number(pesaje.peso) === Number(peso)
+    );
+
+  });
 
 }

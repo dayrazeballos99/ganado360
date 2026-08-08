@@ -9,6 +9,7 @@ import AnimalSummary from "../components/animal/AnimalSummary";
 
 import { obtenerAnimalPorId } from "../services/animalService";
 import MovimientosTab from "../components/animal/tabs/MovimientosTab";
+import AnimalEstadisticasTab from "../components/animal/tabs/AnimalEstadisticasTab";
 
 import {
   Paper,
@@ -96,7 +97,7 @@ setLotes(listaLotes);
 
   <Grid container spacing={3}>
 
-    <Grid item xs={12} md={6}>
+    <Grid size={{ xs: 12, md: 6 }}>
       <Paper sx={{ p:2 }}>
 
         <Typography variant="h6" gutterBottom>
@@ -111,7 +112,7 @@ setLotes(listaLotes);
       </Paper>
     </Grid>
 
-    <Grid item xs={12} md={6}>
+    <Grid size={{ xs: 12, md: 6 }}>
       <Paper sx={{ p:2 }}>
 
         <Typography variant="h6" gutterBottom>
@@ -126,7 +127,7 @@ setLotes(listaLotes);
   <InputLabel>Lote</InputLabel>
 
   <Select
-    value={animal?.lote || ""}
+    value={animal?.loteId || ""}
     label="Lote"
     onChange={async (e) => {
 
@@ -172,7 +173,7 @@ await editarAnimal(
       </Paper>
     </Grid>
 
-    <Grid item xs={12}>
+    <Grid size={{ xs: 12 }}>
       <Paper sx={{ p:2 }}>
 
         <Typography variant="h6" gutterBottom>
@@ -219,7 +220,7 @@ await editarAnimal(
 )}
 
 {tab === 8 && (
-  <Typography>Próximamente Estadísticas.</Typography>
+  <AnimalEstadisticasTab animal={animal} />
 )}
 
       </Paper>
