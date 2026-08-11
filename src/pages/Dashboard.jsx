@@ -17,6 +17,7 @@ import {
 
 import AnimalesPorLoteChart from "../components/dashboard/AnimalesPorLoteChart";
 import PesoDistribucionChart from "../components/dashboard/PesoDistribucionChart";
+import SexoChart from "../components/dashboard/SexoChart";
 
 import { obtenerLotes } from "../services/loteService";
 
@@ -32,6 +33,7 @@ function Dashboard() {
     cantidadLotes: 0,
     animalesPorLote: [],
     pesoDistribucion: [],
+    sexoDistribucion: [],
   });
 
   const [lotes, setLotes] = useState([]);
@@ -50,6 +52,17 @@ function Dashboard() {
 
     cargarResumen();
   }, []);
+
+  const sexoDistribucion = [
+    {
+      nombre: "Machos",
+      cantidad: resumen.machos || 0,
+    },
+    {
+      nombre: "Hembras",
+      cantidad: resumen.hembras || 0,
+    },
+  ];
 
   return (
     <Layout>
@@ -172,7 +185,7 @@ function Dashboard() {
       </Paper>
 
 
-      {/* TARJETAS PRINCIPALES */}
+      {/* TARJETAS */}
 
       <Grid container spacing={2.5}>
 
@@ -247,6 +260,25 @@ function Dashboard() {
         <PesoDistribucionChart
           datos={resumen.pesoDistribucion}
         />
+
+      </Box>
+
+
+      {/* COMPOSICIÓN POR SEXO */}
+
+      <Box sx={{ mt: 3 }}>
+
+        <Grid container spacing={3}>
+
+          <Grid size={{ xs: 12, md: 6 }}>
+
+            <SexoChart
+              datos={sexoDistribucion}
+            />
+
+          </Grid>
+
+        </Grid>
 
       </Box>
 
