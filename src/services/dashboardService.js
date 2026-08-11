@@ -11,7 +11,7 @@ export async function obtenerResumenDashboard(loteId = "") {
     ...doc.data(),
   }));
 
-  // Filtrar por lote (si corresponde)
+  // Filtrar por lote
   const animalesFiltrados = loteId
     ? animales.filter((animal) => animal.loteId === loteId)
     : animales;
@@ -98,7 +98,6 @@ export async function obtenerResumenDashboard(loteId = "") {
     }
 
     lotesMap[animal.loteId]++;
-
   });
 
   const animalesPorLote = Object.entries(lotesMap).map(
@@ -112,14 +111,73 @@ export async function obtenerResumenDashboard(loteId = "") {
         nombre: lote?.nombre || "Sin nombre",
         cantidad,
       };
-
     }
   );
 
+  // Cantidad de lotes
   const cantidadLotes = lotes.length;
+
+  // Distribución de pesos
+  const rangosPeso = [
+    {
+  rango: "Menos de 300 kg",
+  min: 0,
+  max: 299.99,
+},
+    {
+      rango: "300-350 kg",
+      min: 300,
+      max: 350,
+    },
+    {
+      rango: "351-400 kg",
+      min: 351,
+      max: 400,
+    },
+    {
+      rango: "401-450 kg",
+      min: 401,
+      max: 450,
+    },
+    {
+      rango: "451-500 kg",
+      min: 451,
+      max: 500,
+    },
+    {
+      rango: "501-550 kg",
+      min: 501,
+      max: 550,
+    },
+    {
+      rango: "551+ kg",
+      min: 551,
+      max: Infinity,
+    },
+  ];
+
+  const pesoDistribucion = rangosPeso.map(
+    ({ rango, min, max }) => {
+
+      const cantidad = animalesConPeso.filter(
+        (animal) => {
+
+          const peso = Number(animal.peso);
+
+          return peso >= min && peso <= max;
+        }
+      ).length;
+
+      return {
+        rango,
+        cantidad,
+      };
+    }
+  );
 
   return {
     total: animalesFiltrados.length,
+
     activos,
     vendidos,
     muertos,
@@ -139,6 +197,7 @@ export async function obtenerResumenDashboard(loteId = "") {
     cantidadLotes,
 
     animalesPorLote,
-  };
 
+    pesoDistribucion,
+  };
 }

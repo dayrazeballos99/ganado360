@@ -16,6 +16,8 @@ import {
 } from "@mui/material";
 
 import AnimalesPorLoteChart from "../components/dashboard/AnimalesPorLoteChart";
+import PesoDistribucionChart from "../components/dashboard/PesoDistribucionChart";
+
 import { obtenerLotes } from "../services/loteService";
 
 function Dashboard() {
@@ -29,6 +31,7 @@ function Dashboard() {
     pesoTotal: 0,
     cantidadLotes: 0,
     animalesPorLote: [],
+    pesoDistribucion: [],
   });
 
   const [lotes, setLotes] = useState([]);
@@ -183,7 +186,6 @@ function Dashboard() {
           />
         </Grid>
 
-
         <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
           <StatCard
             titulo="Peso promedio"
@@ -193,7 +195,6 @@ function Dashboard() {
             color="#E3F2FD"
           />
         </Grid>
-
 
         <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
           <StatCard
@@ -205,7 +206,6 @@ function Dashboard() {
           />
         </Grid>
 
-
         <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
           <StatCard
             titulo="Alertas"
@@ -215,7 +215,6 @@ function Dashboard() {
             color="#FFF8E1"
           />
         </Grid>
-
 
         <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
           <StatCard
@@ -230,12 +229,23 @@ function Dashboard() {
       </Grid>
 
 
-      {/* GRÁFICO DE ANIMALES POR LOTE */}
+      {/* ANIMALES POR LOTE */}
 
       <Box sx={{ mt: 4 }}>
 
         <AnimalesPorLoteChart
           datos={resumen.animalesPorLote}
+        />
+
+      </Box>
+
+
+      {/* DISTRIBUCIÓN DE PESOS */}
+
+      <Box sx={{ mt: 3 }}>
+
+        <PesoDistribucionChart
+          datos={resumen.pesoDistribucion}
         />
 
       </Box>
