@@ -2,6 +2,7 @@ import { db } from "../firebase/firebase";
 
 import {
   collection,
+  collectionGroup,
   addDoc,
   getDocs,
   query,
@@ -31,8 +32,8 @@ export async function obtenerPesajes(animalId) {
     id: documento.id,
     ...documento.data(),
   }));
-
 }
+
 
 export async function agregarPesaje(
   animalId,
@@ -55,8 +56,8 @@ export async function agregarPesaje(
     id: documento.id,
     ...pesaje,
   };
-
 }
+
 
 export async function editarPesaje(
   animalId,
@@ -76,8 +77,8 @@ export async function editarPesaje(
     referencia,
     pesaje
   );
-
 }
+
 
 export async function eliminarPesaje(
   animalId,
@@ -93,8 +94,8 @@ export async function eliminarPesaje(
   );
 
   await deleteDoc(referencia);
-
 }
+
 
 export async function existePesaje(
   animalId,
@@ -113,5 +114,36 @@ export async function existePesaje(
     );
 
   });
+}
 
+
+/*
+  Obtener todos los pesajes históricos
+  de todos los animales.
+
+  Se utiliza para estadísticas generales,
+  evolución de peso y gráficos del Dashboard.
+*/
+
+export async function obtenerTodosLosPesajes() {
+
+  const referencia = collectionGroup(
+    db,
+    "pesajes"
+  );
+
+  const snapshot = await getDocs(
+    referencia
+  );
+
+  return snapshot.docs.map((documento) => {
+
+    const datos = documento.data();
+
+    return {
+      id: documento.id,
+      ...datos,
+    };
+
+  });
 }

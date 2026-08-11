@@ -3,90 +3,157 @@ import { db } from "../firebase/firebase";
 
 export async function obtenerResumenDashboard(loteId = "") {
 
-  // Leer animales
-  const snapshot = await getDocs(collection(db, "animales"));
+  // =========================
+  // LEER ANIMALES
+  // =========================
+
+  const snapshot = await getDocs(
+    collection(db, "animales")
+  );
 
   const animales = snapshot.docs.map((doc) => ({
     id: doc.id,
     ...doc.data(),
   }));
 
-  // Filtrar por lote
+
+  // =========================
+  // FILTRAR POR LOTE
+  // =========================
+
   const animalesFiltrados = loteId
-    ? animales.filter((animal) => animal.loteId === loteId)
+    ? animales.filter(
+        (animal) => animal.loteId === loteId
+      )
     : animales;
 
-  // Leer lotes
-  const snapshotLotes = await getDocs(collection(db, "lotes"));
+
+  // =========================
+  // LEER LOTES
+  // =========================
+
+  const snapshotLotes = await getDocs(
+    collection(db, "lotes")
+  );
 
   const lotes = snapshotLotes.docs.map((doc) => ({
     id: doc.id,
     ...doc.data(),
   }));
 
-  // Totales
-  const activos = animalesFiltrados.filter(
-    (a) => a.estado === "Activo"
-  ).length;
 
-  const vendidos = animalesFiltrados.filter(
-    (a) => a.estado === "Vendido"
-  ).length;
+  // =========================
+  // ESTADOS
+  // =========================
 
-  const muertos = animalesFiltrados.filter(
-    (a) => a.estado === "Muerto"
-  ).length;
+  const activos =
+    animalesFiltrados.filter(
+      (a) => a.estado === "Activo"
+    ).length;
 
-  // Sexo
-  const machos = animalesFiltrados.filter(
-    (a) => a.sexo === "Macho"
-  ).length;
+  const vendidos =
+    animalesFiltrados.filter(
+      (a) => a.estado === "Vendido"
+    ).length;
 
-  const hembras = animalesFiltrados.filter(
-    (a) => a.sexo === "Hembra"
-  ).length;
+  const muertos =
+    animalesFiltrados.filter(
+      (a) => a.estado === "Muerto"
+    ).length;
 
-  // Categorías
-  const terneros = animalesFiltrados.filter(
-    (a) => a.categoria === "Ternero"
-  ).length;
 
-  const vacas = animalesFiltrados.filter(
-    (a) => a.categoria === "Vaca"
-  ).length;
+  // =========================
+  // SEXO
+  // =========================
 
-  const toros = animalesFiltrados.filter(
-    (a) => a.categoria === "Toro"
-  ).length;
+  const machos =
+    animalesFiltrados.filter(
+      (a) => a.sexo === "Macho"
+    ).length;
 
-  // Alertas
-  const animalesSinPeso = animalesFiltrados.filter(
-    (a) => !a.peso || Number(a.peso) <= 0
-  ).length;
+  const hembras =
+    animalesFiltrados.filter(
+      (a) => a.sexo === "Hembra"
+    ).length;
 
-  // Animales con peso
-  const animalesConPeso = animalesFiltrados.filter(
-    (a) => a.peso && Number(a.peso) > 0
-  );
 
-  // Peso promedio
+  // =========================
+  // CATEGORÍAS
+  // =========================
+
+  const terneros =
+    animalesFiltrados.filter(
+      (a) => a.categoria === "Ternero"
+    ).length;
+
+  const vacas =
+    animalesFiltrados.filter(
+      (a) => a.categoria === "Vaca"
+    ).length;
+
+  const toros =
+    animalesFiltrados.filter(
+      (a) => a.categoria === "Toro"
+    ).length;
+
+
+  // =========================
+  // ALERTAS
+  // =========================
+
+  const animalesSinPeso =
+    animalesFiltrados.filter(
+      (a) =>
+        !a.peso ||
+        Number(a.peso) <= 0
+    ).length;
+
+
+  // =========================
+  // ANIMALES CON PESO
+  // =========================
+
+  const animalesConPeso =
+    animalesFiltrados.filter(
+      (a) =>
+        a.peso &&
+        Number(a.peso) > 0
+    );
+
+
+  // =========================
+  // PESO PROMEDIO
+  // =========================
+
   const pesoPromedio =
     animalesConPeso.length > 0
       ? (
           animalesConPeso.reduce(
-            (suma, animal) => suma + Number(animal.peso),
+            (suma, animal) =>
+              suma + Number(animal.peso),
             0
-          ) / animalesConPeso.length
+          ) /
+          animalesConPeso.length
         ).toFixed(1)
       : 0;
 
-  // Peso total
-  const pesoTotal = animalesConPeso.reduce(
-    (suma, animal) => suma + Number(animal.peso),
-    0
-  );
 
-  // Animales por lote
+  // =========================
+  // PESO TOTAL
+  // =========================
+
+  const pesoTotal =
+    animalesConPeso.reduce(
+      (suma, animal) =>
+        suma + Number(animal.peso),
+      0
+    );
+
+
+  // =========================
+  // ANIMALES POR LOTE
+  // =========================
+
   const lotesMap = {};
 
   animalesFiltrados.forEach((animal) => {
@@ -98,106 +165,222 @@ export async function obtenerResumenDashboard(loteId = "") {
     }
 
     lotesMap[animal.loteId]++;
+
   });
 
-  const animalesPorLote = Object.entries(lotesMap).map(
-    ([loteId, cantidad]) => {
 
-      const lote = lotes.find(
-        (l) => l.id === loteId
-      );
+  const animalesPorLote =
+    Object.entries(lotesMap).map(
+      ([loteId, cantidad]) => {
 
-      return {
-        nombre: lote?.nombre || "Sin nombre",
-        cantidad,
-      };
+        const lote =
+          lotes.find(
+            (l) => l.id === loteId
+          );
+
+        return {
+          nombre:
+            lote?.nombre ||
+            "Sin nombre",
+          cantidad,
+        };
+
+      }
+    );
+
+
+  // =========================
+  // PESO PROMEDIO POR LOTE
+  // =========================
+
+  const pesoPorLoteMap = {};
+
+
+  animalesFiltrados.forEach((animal) => {
+
+    if (!animal.loteId) return;
+
+    const peso =
+      Number(animal.peso);
+
+
+    if (
+      !Number.isFinite(peso) ||
+      peso <= 0
+    ) {
+      return;
     }
-  );
 
-  // Cantidad de lotes
-  const cantidadLotes = lotes.length;
 
-  // Distribución de pesos
+    if (!pesoPorLoteMap[animal.loteId]) {
+
+      pesoPorLoteMap[animal.loteId] = {
+        suma: 0,
+        cantidad: 0,
+      };
+
+    }
+
+
+    pesoPorLoteMap[animal.loteId].suma +=
+      peso;
+
+    pesoPorLoteMap[animal.loteId].cantidad +=
+      1;
+
+  });
+
+
+  const pesoPorLote =
+    Object.entries(
+      pesoPorLoteMap
+    ).map(
+      ([loteId, datos]) => {
+
+        const lote =
+          lotes.find(
+            (l) => l.id === loteId
+          );
+
+
+        const promedio =
+          datos.suma /
+          datos.cantidad;
+
+
+        return {
+          nombre:
+            lote?.nombre ||
+            "Sin nombre",
+
+          pesoPromedio:
+            Number(
+              promedio.toFixed(1)
+            ),
+        };
+
+      }
+    );
+
+
+  // =========================
+  // DISTRIBUCIÓN DE PESOS
+  // =========================
+
   const rangosPeso = [
     {
-  rango: "Menos de 300 kg",
-  min: 0,
-  max: 299.99,
-},
-    {
-      rango: "300-350 kg",
-      min: 300,
-      max: 350,
+      nombre: "Menos de 300 kg",
+      minimo: 0,
+      maximo: 299.99,
     },
     {
-      rango: "351-400 kg",
-      min: 351,
-      max: 400,
+      nombre: "300-350 kg",
+      minimo: 300,
+      maximo: 350,
     },
     {
-      rango: "401-450 kg",
-      min: 401,
-      max: 450,
+      nombre: "351-400 kg",
+      minimo: 351,
+      maximo: 400,
     },
     {
-      rango: "451-500 kg",
-      min: 451,
-      max: 500,
+      nombre: "401-450 kg",
+      minimo: 401,
+      maximo: 450,
     },
     {
-      rango: "501-550 kg",
-      min: 501,
-      max: 550,
+      nombre: "451-500 kg",
+      minimo: 451,
+      maximo: 500,
     },
     {
-      rango: "551+ kg",
-      min: 551,
-      max: Infinity,
+      nombre: "501-550 kg",
+      minimo: 501,
+      maximo: 550,
+    },
+    {
+      nombre: "551+ kg",
+      minimo: 551,
+      maximo: Infinity,
     },
   ];
 
-  const pesoDistribucion = rangosPeso.map(
-    ({ rango, min, max }) => {
 
-      const cantidad = animalesConPeso.filter(
-        (animal) => {
+  const pesoDistribucion =
+    rangosPeso.map((rango) => {
 
-          const peso = Number(animal.peso);
+      const cantidad =
+        animalesConPeso.filter(
+          (animal) => {
 
-          return peso >= min && peso <= max;
-        }
-      ).length;
+            const peso =
+              Number(animal.peso);
+
+            return (
+              peso >= rango.minimo &&
+              peso <= rango.maximo
+            );
+
+          }
+        ).length;
+
 
       return {
-        rango,
-        cantidad,
-      };
-    }
-  );
+  rango: rango.nombre,
+  cantidad,
+};
+
+    });
+
+
+  // =========================
+  // CANTIDAD DE LOTES
+  // =========================
+
+  const cantidadLotes =
+    lotes.length;
+
+
+  // =========================
+  // RESULTADO
+  // =========================
 
   return {
-    total: animalesFiltrados.length,
+
+    total:
+      animalesFiltrados.length,
 
     activos,
+
     vendidos,
+
     muertos,
 
     machos,
+
     hembras,
 
     terneros,
+
     vacas,
+
     toros,
 
-    alertas: animalesSinPeso,
+    alertas:
+      animalesSinPeso,
 
     pesoPromedio,
+
     pesoTotal,
 
     cantidadLotes,
 
     animalesPorLote,
 
+    pesoPorLote,
+
     pesoDistribucion,
+
   };
+
 }

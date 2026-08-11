@@ -2,7 +2,13 @@ import Layout from "../components/Layout";
 import StatCard from "../components/StatCard";
 import { useEffect, useState } from "react";
 
-import { obtenerResumenDashboard } from "../services/dashboardService";
+import {
+  obtenerResumenDashboard,
+} from "../services/dashboardService";
+
+import {
+  obtenerTodosLosPesajes,
+} from "../services/pesajeService";
 
 import {
   Grid,
@@ -17,11 +23,14 @@ import {
 
 import AnimalesPorLoteChart from "../components/dashboard/AnimalesPorLoteChart";
 import PesoDistribucionChart from "../components/dashboard/PesoDistribucionChart";
+import PesoPromedioChart from "../components/dashboard/PesoPromedioChart";
+import PesoPorLoteChart from "../components/dashboard/PesoPorLoteChart";
 import SexoChart from "../components/dashboard/SexoChart";
 
 import { obtenerLotes } from "../services/loteService";
 
 function Dashboard() {
+
   const [resumen, setResumen] = useState({
     total: 0,
     activos: 0,
@@ -33,25 +42,118 @@ function Dashboard() {
     cantidadLotes: 0,
     animalesPorLote: [],
     pesoDistribucion: [],
-    sexoDistribucion: [],
+    pesoPorLote: [],
+    machos: 0,
+    hembras: 0,
   });
 
+  const [pesosHistoricos, setPesosHistoricos] = useState([]);
+
   const [lotes, setLotes] = useState([]);
+
   const [loteSeleccionado, setLoteSeleccionado] = useState("");
 
   useEffect(() => {
-    async function cargarResumen() {
-      const datos = await obtenerResumenDashboard();
 
-      setResumen(datos);
+    async function cargarDashboard() {
 
-      const listaLotes = await obtenerLotes();
+      try {
 
-      setLotes(listaLotes);
+        const datos =
+          await obtenerResumenDashboard(
+            loteSeleccionado
+          );
+
+        setResumen(datos);
+
+        const listaLotes =
+          await obtenerLotes();
+
+        setLotes(listaLotes);
+
+        const pesajes =
+          await obtenerTodosLosPesajes();
+
+        const pesosPorFecha = {};
+
+        pesajes.forEach((pesaje) => {
+
+          if (
+            !pesaje.fecha ||
+            !pesaje.peso
+          ) {
+            return;
+          }
+
+          const peso =
+            Number(pesaje.peso);
+
+          if (
+            !Number.isFinite(peso) ||
+            peso <= 0
+          ) {
+            return;
+          }
+
+          if (!pesosPorFecha[pesaje.fecha]) {
+            pesosPorFecha[pesaje.fecha] = [];
+          }
+
+          pesosPorFecha[pesaje.fecha].push(
+            peso
+          );
+
+        });
+
+        const evolucionPeso =
+          Object.entries(
+            pesosPorFecha
+          )
+            .map(([fecha, pesos]) => {
+
+              const suma =
+                pesos.reduce(
+                  (total, peso) =>
+                    total + peso,
+                  0
+                );
+
+              const promedio =
+                suma / pesos.length;
+
+              return {
+                fecha,
+                pesoPromedio:
+                  Number(
+                    promedio.toFixed(1)
+                  ),
+              };
+
+            })
+            .sort(
+              (a, b) =>
+                new Date(a.fecha) -
+                new Date(b.fecha)
+            );
+
+        setPesosHistoricos(
+          evolucionPeso
+        );
+
+      } catch (error) {
+
+        console.error(
+          "Error cargando Dashboard:",
+          error
+        );
+
+      }
+
     }
 
-    cargarResumen();
-  }, []);
+    cargarDashboard();
+
+  }, [loteSeleccionado]);
 
   const sexoDistribucion = [
     {
@@ -66,8 +168,6 @@ function Dashboard() {
 
   return (
     <Layout>
-
-      {/* ENCABEZADO */}
 
       <Box sx={{ mb: 4 }}>
 
@@ -104,9 +204,6 @@ function Dashboard() {
         </Typography>
 
       </Box>
-
-
-      {/* FILTRO DE LOTE */}
 
       <Paper
         elevation={0}
@@ -156,7 +253,9 @@ function Dashboard() {
             label="Lote"
             value={loteSeleccionado}
             onChange={(e) =>
-              setLoteSeleccionado(e.target.value)
+              setLoteSeleccionado(
+                e.target.value
+              )
             }
             size="small"
             sx={{
@@ -170,12 +269,14 @@ function Dashboard() {
             </MenuItem>
 
             {lotes.map((lote) => (
+
               <MenuItem
                 key={lote.id}
                 value={lote.id}
               >
                 {lote.nombre}
               </MenuItem>
+
             ))}
 
           </TextField>
@@ -184,12 +285,15 @@ function Dashboard() {
 
       </Paper>
 
-
-      {/* TARJETAS */}
-
       <Grid container spacing={2.5}>
 
-        <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 6,
+            lg: 3,
+          }}
+        >
           <StatCard
             titulo="Animales"
             valor={resumen.total}
@@ -199,7 +303,13 @@ function Dashboard() {
           />
         </Grid>
 
-        <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 6,
+            lg: 3,
+          }}
+        >
           <StatCard
             titulo="Peso promedio"
             valor={`${resumen.pesoPromedio} kg`}
@@ -209,7 +319,13 @@ function Dashboard() {
           />
         </Grid>
 
-        <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 6,
+            lg: 3,
+          }}
+        >
           <StatCard
             titulo="Peso total"
             valor={`${resumen.pesoTotal} kg`}
@@ -219,7 +335,13 @@ function Dashboard() {
           />
         </Grid>
 
-        <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 6,
+            lg: 3,
+          }}
+        >
           <StatCard
             titulo="Alertas"
             valor={resumen.alertas}
@@ -229,7 +351,13 @@ function Dashboard() {
           />
         </Grid>
 
-        <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 6,
+            lg: 3,
+          }}
+        >
           <StatCard
             titulo="Lotes"
             valor={resumen.cantidadLotes}
@@ -241,49 +369,48 @@ function Dashboard() {
 
       </Grid>
 
-
-      {/* ANIMALES POR LOTE */}
-
       <Box sx={{ mt: 4 }}>
-
         <AnimalesPorLoteChart
           datos={resumen.animalesPorLote}
         />
-
       </Box>
 
-
-      {/* DISTRIBUCIÓN DE PESOS */}
-
       <Box sx={{ mt: 3 }}>
-
         <PesoDistribucionChart
           datos={resumen.pesoDistribucion}
         />
-
       </Box>
 
+      <Box sx={{ mt: 3 }}>
+        <PesoPromedioChart
+          datos={pesosHistoricos}
+        />
+      </Box>
 
-      {/* COMPOSICIÓN POR SEXO */}
+      <Box sx={{ mt: 3 }}>
+        <PesoPorLoteChart
+          datos={resumen.pesoPorLote}
+        />
+      </Box>
 
       <Box sx={{ mt: 3 }}>
 
         <Grid container spacing={3}>
 
-          <Grid size={{ xs: 12, md: 6 }}>
-
+          <Grid
+            size={{
+              xs: 12,
+              md: 6,
+            }}
+          >
             <SexoChart
               datos={sexoDistribucion}
             />
-
           </Grid>
 
         </Grid>
 
       </Box>
-
-
-      {/* PRÓXIMAS TAREAS */}
 
       <Box sx={{ mt: 3 }}>
 
@@ -314,9 +441,6 @@ function Dashboard() {
         </Paper>
 
       </Box>
-
-
-      {/* ACTIVIDAD RECIENTE */}
 
       <Box
         sx={{
