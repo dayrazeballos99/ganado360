@@ -1,4 +1,7 @@
-import { useState } from "react";
+import {
+  useEffect,
+  useState,
+} from "react";
 
 import {
   Dialog,
@@ -10,6 +13,7 @@ import {
   TextField,
   MenuItem,
 } from "@mui/material";
+
 
 const tiposPesaje = [
   "Nacimiento",
@@ -24,35 +28,16 @@ const tiposPesaje = [
   "Otro",
 ];
 
-function PesajeDialog({ open, onClose, onGuardar }) {
 
-  const [pesaje, setPesaje] = useState({
-    fecha: "",
-    tipo: "Control",
-    peso: "",
-    responsable: "",
-    observaciones: "",
-  });
+function PesajeDialog({
+  open,
+  onClose,
+  onGuardar,
+  pesajeInicial = null,
+}) {
 
-  function cambiar(e) {
-
-    setPesaje({
-      ...pesaje,
-      [e.target.name]: e.target.value,
-    });
-
-  }
-
-  function guardar() {
-
-    if (!pesaje.fecha || !pesaje.peso) {
-      alert("La fecha y el peso son obligatorios.");
-      return;
-    }
-
-    onGuardar(pesaje);
-
-    setPesaje({
+  const [pesaje, setPesaje] =
+    useState({
       fecha: "",
       tipo: "Control",
       peso: "",
@@ -60,7 +45,83 @@ function PesajeDialog({ open, onClose, onGuardar }) {
       observaciones: "",
     });
 
+
+  useEffect(() => {
+
+    if (pesajeInicial) {
+
+      setPesaje({
+        fecha:
+          pesajeInicial.fecha || "",
+
+        tipo:
+          pesajeInicial.tipo ||
+          "Control",
+
+        peso:
+          pesajeInicial.peso || "",
+
+        responsable:
+          pesajeInicial.responsable ||
+          "",
+
+        observaciones:
+          pesajeInicial.observaciones ||
+          "",
+      });
+
+    } else {
+
+      setPesaje({
+        fecha: "",
+        tipo: "Control",
+        peso: "",
+        responsable: "",
+        observaciones: "",
+      });
+
+    }
+
+  }, [
+    pesajeInicial,
+    open,
+  ]);
+
+
+  function cambiar(e) {
+
+    setPesaje({
+      ...pesaje,
+      [e.target.name]:
+        e.target.value,
+    });
+
   }
+
+
+  function guardar() {
+
+    if (
+      !pesaje.fecha ||
+      !pesaje.peso
+    ) {
+
+      alert(
+        "La fecha y el peso son obligatorios."
+      );
+
+      return;
+    }
+
+
+    onGuardar(pesaje);
+
+  }
+
+
+  const modoEdicion =
+    Boolean(pesajeInicial);
+
 
   return (
 
@@ -72,26 +133,41 @@ function PesajeDialog({ open, onClose, onGuardar }) {
     >
 
       <DialogTitle>
-        ⚖️ Nuevo Pesaje
+
+        {modoEdicion
+          ? "✏️ Editar Pesaje"
+          : "⚖️ Nuevo Pesaje"}
+
       </DialogTitle>
+
 
       <DialogContent>
 
-        <Grid container spacing={2} sx={{ mt:1 }}>
+        <Grid
+          container
+          spacing={2}
+          sx={{ mt: 1 }}
+        >
 
           <Grid size={{ xs: 12 }}>
+
             <TextField
               fullWidth
               type="date"
               name="fecha"
               label="Fecha"
-              InputLabelProps={{ shrink:true }}
+              InputLabelProps={{
+                shrink: true,
+              }}
               value={pesaje.fecha}
               onChange={cambiar}
             />
+
           </Grid>
 
+
           <Grid size={{ xs: 12 }}>
+
             <TextField
               select
               fullWidth
@@ -100,15 +176,27 @@ function PesajeDialog({ open, onClose, onGuardar }) {
               value={pesaje.tipo}
               onChange={cambiar}
             >
-              {tiposPesaje.map((tipo) => (
-                <MenuItem key={tipo} value={tipo}>
-                  {tipo}
-                </MenuItem>
-              ))}
+
+              {tiposPesaje.map(
+                (tipo) => (
+
+                  <MenuItem
+                    key={tipo}
+                    value={tipo}
+                  >
+                    {tipo}
+                  </MenuItem>
+
+                )
+              )}
+
             </TextField>
+
           </Grid>
 
+
           <Grid size={{ xs: 12 }}>
+
             <TextField
               fullWidth
               type="number"
@@ -116,46 +204,66 @@ function PesajeDialog({ open, onClose, onGuardar }) {
               label="Peso (kg)"
               value={pesaje.peso}
               onChange={cambiar}
+              inputProps={{
+                min: 0,
+              }}
             />
+
           </Grid>
 
+
           <Grid size={{ xs: 12 }}>
+
             <TextField
               fullWidth
               name="responsable"
               label="Responsable"
-              value={pesaje.responsable}
+              value={
+                pesaje.responsable
+              }
               onChange={cambiar}
             />
+
           </Grid>
 
+
           <Grid size={{ xs: 12 }}>
+
             <TextField
               fullWidth
               multiline
               rows={3}
               name="observaciones"
               label="Observaciones"
-              value={pesaje.observaciones}
+              value={
+                pesaje.observaciones
+              }
               onChange={cambiar}
             />
+
           </Grid>
 
         </Grid>
 
       </DialogContent>
 
+
       <DialogActions>
 
-        <Button onClick={onClose}>
+        <Button
+          onClick={onClose}
+        >
           Cancelar
         </Button>
+
 
         <Button
           variant="contained"
           onClick={guardar}
         >
-          Guardar
+          {modoEdicion
+            ? "Guardar cambios"
+            : "Guardar"}
         </Button>
 
       </DialogActions>
@@ -163,7 +271,7 @@ function PesajeDialog({ open, onClose, onGuardar }) {
     </Dialog>
 
   );
-
 }
+
 
 export default PesajeDialog;
