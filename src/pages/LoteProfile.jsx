@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import Layout from "../components/Layout";
 import AnimalesTab from "../components/animal/lote/tabs/AnimalesTab";
 import EstadisticasTab from "../components/animal/lote/tabs/EstadisticasTab";
+import PesajesTab from "../components/animal/lote/tabs/PesajesTab";
 
 import {
   Paper,
@@ -17,38 +18,29 @@ import {
 import { obtenerResumenLote } from "../services/loteProfileService";
 
 export default function LoteProfile() {
-
   const { id } = useParams();
 
   const [lote, setLote] = useState(null);
   const [tab, setTab] = useState(0);
 
   useEffect(() => {
-
     async function cargar() {
-
       const datos = await obtenerResumenLote(id);
-
       setLote(datos);
-
     }
 
     cargar();
-
   }, [id]);
 
   if (!lote) {
-
     return (
       <Layout>
         <CircularProgress />
       </Layout>
     );
-
   }
 
   return (
-
     <Layout>
 
       <Typography
@@ -59,8 +51,7 @@ export default function LoteProfile() {
         📦 {lote.nombre}
       </Typography>
 
-      <Paper sx={{ p:3, mb:3 }}>
-
+      <Paper sx={{ p: 3, mb: 3 }}>
         <Grid container spacing={3}>
 
           <Grid size={{ xs: 12, md: 4 }}>
@@ -82,18 +73,15 @@ export default function LoteProfile() {
           </Grid>
 
         </Grid>
-
       </Paper>
 
       <Paper>
-
         <Tabs
           value={tab}
           onChange={(e, nuevo) => setTab(nuevo)}
           variant="scrollable"
           scrollButtons="auto"
         >
-
           <Tab label="📋 Resumen" />
           <Tab label="🐄 Animales" />
           <Tab label="⚖️ Pesajes" />
@@ -101,19 +89,16 @@ export default function LoteProfile() {
           <Tab label="🚚 Movimientos" />
           <Tab label="📈 Estadísticas" />
           <Tab label="🌾 Alimentación" />
-
         </Tabs>
-
       </Paper>
 
-      <Paper sx={{ p:4, mt:3 }}>
+      <Paper sx={{ p: 4, mt: 3 }}>
 
         {tab === 0 && (
-
           <Grid container spacing={3}>
 
             <Grid size={{ xs: 12, md: 3 }}>
-              <Paper sx={{ p:2 }}>
+              <Paper sx={{ p: 2 }}>
                 <Typography variant="body2">
                   🐄 Animales
                 </Typography>
@@ -125,7 +110,7 @@ export default function LoteProfile() {
             </Grid>
 
             <Grid size={{ xs: 12, md: 3 }}>
-              <Paper sx={{ p:2 }}>
+              <Paper sx={{ p: 2 }}>
                 <Typography variant="body2">
                   ⚖️ Peso promedio
                 </Typography>
@@ -137,7 +122,7 @@ export default function LoteProfile() {
             </Grid>
 
             <Grid size={{ xs: 12, md: 3 }}>
-              <Paper sx={{ p:2 }}>
+              <Paper sx={{ p: 2 }}>
                 <Typography variant="body2">
                   🏋️ Peso total
                 </Typography>
@@ -149,7 +134,7 @@ export default function LoteProfile() {
             </Grid>
 
             <Grid size={{ xs: 12, md: 3 }}>
-              <Paper sx={{ p:2 }}>
+              <Paper sx={{ p: 2 }}>
                 <Typography variant="body2">
                   📈 GMD
                 </Typography>
@@ -161,7 +146,6 @@ export default function LoteProfile() {
             </Grid>
 
           </Grid>
-
         )}
 
         {tab === 1 && (
@@ -171,7 +155,9 @@ export default function LoteProfile() {
         )}
 
         {tab === 2 && (
-          <Typography>Próximamente.</Typography>
+          <PesajesTab
+            animales={lote.animales}
+          />
         )}
 
         {tab === 3 && (
@@ -183,10 +169,10 @@ export default function LoteProfile() {
         )}
 
         {tab === 5 && (
-  <EstadisticasTab
-    lote={lote}
-  />
-)}
+          <EstadisticasTab
+            animales={lote.animales}
+          />
+        )}
 
         {tab === 6 && (
           <Typography>Próximamente.</Typography>
@@ -195,7 +181,5 @@ export default function LoteProfile() {
       </Paper>
 
     </Layout>
-
   );
-
 }
