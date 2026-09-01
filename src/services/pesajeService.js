@@ -13,7 +13,6 @@ import {
 } from "firebase/firestore";
 
 export async function obtenerPesajes(animalId) {
-
   const referencia = collection(
     db,
     "animales",
@@ -34,12 +33,10 @@ export async function obtenerPesajes(animalId) {
   }));
 }
 
-
 export async function agregarPesaje(
   animalId,
   pesaje
 ) {
-
   const referencia = collection(
     db,
     "animales",
@@ -58,13 +55,11 @@ export async function agregarPesaje(
   };
 }
 
-
 export async function editarPesaje(
   animalId,
   pesajeId,
   pesaje
 ) {
-
   const referencia = doc(
     db,
     "animales",
@@ -79,12 +74,10 @@ export async function editarPesaje(
   );
 }
 
-
 export async function eliminarPesaje(
   animalId,
   pesajeId
 ) {
-
   const referencia = doc(
     db,
     "animales",
@@ -96,37 +89,31 @@ export async function eliminarPesaje(
   await deleteDoc(referencia);
 }
 
-
 export async function existePesaje(
   animalId,
   fecha,
   peso
 ) {
-
   const pesajes =
     await obtenerPesajes(animalId);
 
   return pesajes.some((pesaje) => {
-
     return (
       String(pesaje.fecha) === String(fecha) &&
       Number(pesaje.peso) === Number(peso)
     );
-
   });
 }
 
-
 /*
-  Obtener todos los pesajes históricos
-  de todos los animales.
+Obtener todos los pesajes históricos
+de todos los animales.
 
-  Se utiliza para estadísticas generales,
-  evolución de peso y gráficos del Dashboard.
+También agrega el animalId al resultado,
+obteniéndolo desde la ruta del documento.
 */
 
 export async function obtenerTodosLosPesajes() {
-
   const referencia = collectionGroup(
     db,
     "pesajes"
@@ -137,13 +124,17 @@ export async function obtenerTodosLosPesajes() {
   );
 
   return snapshot.docs.map((documento) => {
-
     const datos = documento.data();
+
+    // La ruta es:
+    // animales / animalId / pesajes / pesajeId
+    const animalId =
+      documento.ref.parent.parent.id;
 
     return {
       id: documento.id,
+      animalId,
       ...datos,
     };
-
   });
 }

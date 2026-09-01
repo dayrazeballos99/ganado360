@@ -1,5 +1,3 @@
-import SanidadTab from "../components/animal/tabs/SanidadTab";
-import PesajesTab from "../components/animal/tabs/PesajesTab";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
@@ -7,9 +5,22 @@ import Layout from "../components/Layout";
 import AnimalHeader from "../components/animal/AnimalHeader";
 import AnimalSummary from "../components/animal/AnimalSummary";
 
-import { obtenerAnimalPorId } from "../services/animalService";
-import MovimientosTab from "../components/animal/tabs/MovimientosTab";
+import PesajesTab from "../components/animal/tabs/PesajesTab";
+import SanidadTab from "../components/animal/tabs/SanidadTab";
+import AlimentacionTab from "../components/animal/tabs/AlimentacionTab";
+import ReproduccionTab from "../components/animal/tabs/ReproduccionTab";
+import HistorialTab from "../components/animal/tabs/HistorialTab";
+import ComercialTab from "../components/animal/tabs/ComercialTab";
 import AnimalEstadisticasTab from "../components/animal/tabs/AnimalEstadisticasTab";
+
+import {
+  obtenerAnimalPorId,
+  editarAnimal,
+} from "../services/animalService";
+
+import {
+  obtenerLotes,
+} from "../services/loteService";
 
 import {
   Paper,
@@ -17,21 +28,12 @@ import {
   Grid,
   Tabs,
   Tab,
-} from "@mui/material";
-import {
-  obtenerLotes,
-} from "../services/loteService";
-
-import {
-  editarAnimal,
-} from "../services/animalService";
-
-import {
   FormControl,
   InputLabel,
   Select,
   MenuItem,
 } from "@mui/material";
+
 
 function AnimalProfile() {
 
@@ -43,23 +45,27 @@ function AnimalProfile() {
 
   const [lotes, setLotes] = useState([]);
 
+
   useEffect(() => {
 
     async function cargarAnimal() {
 
-      const datos = await obtenerAnimalPorId(id);
+      const datos =
+        await obtenerAnimalPorId(id);
 
-setAnimal(datos);
+      setAnimal(datos);
 
-const listaLotes = await obtenerLotes();
+      const listaLotes =
+        await obtenerLotes();
 
-setLotes(listaLotes);
+      setLotes(listaLotes);
 
     }
 
     cargarAnimal();
 
   }, [id]);
+
 
   return (
 
@@ -69,11 +75,14 @@ setLotes(listaLotes);
 
       <AnimalSummary animal={animal} />
 
+
       <Paper>
 
         <Tabs
           value={tab}
-          onChange={(e, nuevo) => setTab(nuevo)}
+          onChange={(e, nuevo) =>
+            setTab(nuevo)
+          }
           variant="scrollable"
           scrollButtons="auto"
         >
@@ -83,7 +92,6 @@ setLotes(listaLotes);
           <Tab label="💉 Sanidad" />
           <Tab label="🌾 Alimentación" />
           <Tab label="🐄 Reproducción" />
-          <Tab label="🚚 Movimientos" />
           <Tab label="📜 Historial" />
           <Tab label="💰 Comercial" />
           <Tab label="📊 Estadísticas" />
@@ -92,136 +100,242 @@ setLotes(listaLotes);
 
       </Paper>
 
-      <Paper sx={{ p:4, mt:3 }}>
+
+      <Paper
+        sx={{
+          p: 4,
+          mt: 3,
+        }}
+      >
+
         {tab === 0 && (
 
-  <Grid container spacing={3}>
+          <Grid
+            container
+            spacing={3}
+          >
 
-    <Grid size={{ xs: 12, md: 6 }}>
-      <Paper sx={{ p:2 }}>
+            <Grid
+              size={{
+                xs: 12,
+                md: 6,
+              }}
+            >
 
-        <Typography variant="h6" gutterBottom>
-          📋 Identificación
-        </Typography>
+              <Paper sx={{ p: 2 }}>
 
-        <Typography><b>RP:</b> {animal?.rp || "-"}</Typography>
-        <Typography><b>Caravana:</b> {animal?.caravana || "-"}</Typography>
-        <Typography><b>Nombre:</b> {animal?.nombre || "-"}</Typography>
-        <Typography><b>Estado:</b> {animal?.estado || "-"}</Typography>
+                <Typography
+                  variant="h6"
+                  gutterBottom
+                >
+                  📋 Identificación
+                </Typography>
 
-      </Paper>
-    </Grid>
+                <Typography>
+                  <b>RP:</b>{" "}
+                  {animal?.rp || "-"}
+                </Typography>
 
-    <Grid size={{ xs: 12, md: 6 }}>
-      <Paper sx={{ p:2 }}>
+                <Typography>
+                  <b>Caravana:</b>{" "}
+                  {animal?.caravana || "-"}
+                </Typography>
 
-        <Typography variant="h6" gutterBottom>
-          🐄 Datos Generales
-        </Typography>
+                <Typography>
+                  <b>Nombre:</b>{" "}
+                  {animal?.nombre || "-"}
+                </Typography>
 
-        <Typography><b>Raza:</b> {animal?.raza || "-"}</Typography>
-        <Typography><b>Sexo:</b> {animal?.sexo || "-"}</Typography>
-        <Typography><b>Categoría:</b> {animal?.categoria || "-"}</Typography>
-        <FormControl fullWidth sx={{ mt: 2 }}>
+                <Typography>
+                  <b>Estado:</b>{" "}
+                  {animal?.estado || "-"}
+                </Typography>
 
-  <InputLabel>Lote</InputLabel>
+              </Paper>
 
-  <Select
-    value={animal?.loteId || ""}
-    label="Lote"
-    onChange={async (e) => {
+            </Grid>
 
-      const nuevoLoteId = e.target.value;
 
-const actualizado = {
-  ...animal,
-  loteId: nuevoLoteId,
-};
+            <Grid
+              size={{
+                xs: 12,
+                md: 6,
+              }}
+            >
 
-setAnimal(actualizado);
+              <Paper sx={{ p: 2 }}>
 
-await editarAnimal(
-  animal.id,
-  {
-    loteId: nuevoLoteId,
-  }
-);
+                <Typography
+                  variant="h6"
+                  gutterBottom
+                >
+                  🐄 Datos Generales
+                </Typography>
 
-    }}
-  >
+                <Typography>
+                  <b>Raza:</b>{" "}
+                  {animal?.raza || "-"}
+                </Typography>
 
-    <MenuItem value="">
-      Sin lote
-    </MenuItem>
+                <Typography>
+                  <b>Sexo:</b>{" "}
+                  {animal?.sexo || "-"}
+                </Typography>
 
-    {lotes.map((lote) => (
+                <Typography>
+                  <b>Categoría:</b>{" "}
+                  {animal?.categoria || "-"}
+                </Typography>
 
-      <MenuItem
-  key={lote.id}
-  value={lote.id}
->
-  {lote.nombre}
-</MenuItem>
 
-    ))}
+                <FormControl
+                  fullWidth
+                  sx={{ mt: 2 }}
+                >
 
-  </Select>
+                  <InputLabel>
+                    Lote
+                  </InputLabel>
 
-</FormControl>
-        <Typography><b>Peso:</b> {animal?.peso || "-"} kg</Typography>
+                  <Select
+                    value={
+                      animal?.loteId || ""
+                    }
+                    label="Lote"
+                    onChange={async (e) => {
 
-      </Paper>
-    </Grid>
+                      const nuevoLoteId =
+                        e.target.value;
 
-    <Grid size={{ xs: 12 }}>
-      <Paper sx={{ p:2 }}>
+                      const actualizado = {
+                        ...animal,
+                        loteId: nuevoLoteId,
+                      };
 
-        <Typography variant="h6" gutterBottom>
-          📝 Observaciones
-        </Typography>
+                      setAnimal(actualizado);
 
-        <Typography>
-          {animal?.observaciones || "Sin observaciones."}
-        </Typography>
+                      await editarAnimal(
+                        animal.id,
+                        {
+                          loteId:
+                            nuevoLoteId,
+                        }
+                      );
 
-      </Paper>
-    </Grid>
+                    }}
+                  >
 
-  </Grid>
+                    <MenuItem value="">
+                      Sin lote
+                    </MenuItem>
+
+
+                    {lotes.map((lote) => (
+
+                      <MenuItem
+                        key={lote.id}
+                        value={lote.id}
+                      >
+                        {lote.nombre}
+                      </MenuItem>
+
+                    ))}
+
+                  </Select>
+
+                </FormControl>
+
+              </Paper>
+
+            </Grid>
+
+
+            <Grid size={{ xs: 12 }}>
+
+              <Paper sx={{ p: 2 }}>
+
+                <Typography
+                  variant="h6"
+                  gutterBottom
+                >
+                  📝 Observaciones
+                </Typography>
+
+                <Typography>
+                  {animal?.observaciones ||
+                    "Sin observaciones."}
+                </Typography>
+
+              </Paper>
+
+            </Grid>
+
+          </Grid>
+
+        )}
+
+
+        {tab === 1 && (
+
+          <PesajesTab
+            animal={animal}
+          />
+
+        )}
+
+
+        {tab === 2 && (
+
+          <SanidadTab
+            animal={animal}
+          />
+
+        )}
+
+
+        {tab === 3 && (
+
+          <AlimentacionTab
+            animal={animal}
+          />
+
+        )}
+
+
+        {tab === 4 && (
+
+          <ReproduccionTab
+            animal={animal}
+          />
+
+        )}
+
+
+        {tab === 5 && (
+
+          <HistorialTab
+            animal={animal}
+          />
+
+        )}
+
+
+        {tab === 6 && (
+
+  <ComercialTab
+    animal={animal}
+  />
 
 )}
 
-{tab === 1 && (
-  <PesajesTab animal={animal} />
-)}
 
-{tab === 2 && (
-  <SanidadTab animal={animal} />
-)}
+        {tab === 7 && (
 
-{tab === 3 && (
-  <Typography>Próximamente Alimentación.</Typography>
-)}
-{tab === 4 && (
-  <Typography>Próximamente Reproducción.</Typography>
-)}
+          <AnimalEstadisticasTab
+            animal={animal}
+          />
 
-{tab === 5 && (
-  <MovimientosTab animal={animal} />
-)}
-
-{tab === 6 && (
-  <Typography>
-    Próximamente Historial.
-  </Typography>
-)}
-{tab === 7 && (
-  <Typography>Próximamente Comercial.</Typography>
-)}
-
-{tab === 8 && (
-  <AnimalEstadisticasTab animal={animal} />
-)}
+        )}
 
       </Paper>
 
@@ -230,5 +344,6 @@ await editarAnimal(
   );
 
 }
+
 
 export default AnimalProfile;

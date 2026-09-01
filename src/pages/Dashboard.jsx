@@ -30,7 +30,6 @@ import SexoChart from "../components/dashboard/SexoChart";
 import { obtenerLotes } from "../services/loteService";
 
 function Dashboard() {
-
   const [resumen, setResumen] = useState({
     total: 0,
     activos: 0,
@@ -47,18 +46,17 @@ function Dashboard() {
     hembras: 0,
   });
 
-  const [pesosHistoricos, setPesosHistoricos] = useState([]);
+  const [pesosHistoricos, setPesosHistoricos] =
+    useState([]);
 
   const [lotes, setLotes] = useState([]);
 
-  const [loteSeleccionado, setLoteSeleccionado] = useState("");
+  const [loteSeleccionado, setLoteSeleccionado] =
+    useState("");
 
   useEffect(() => {
-
     async function cargarDashboard() {
-
       try {
-
         const datos =
           await obtenerResumenDashboard(
             loteSeleccionado
@@ -74,61 +72,48 @@ function Dashboard() {
         const pesajes =
           await obtenerTodosLosPesajes();
 
-        const pesosPorFecha = {};
+        // =====================================
+        // FILTRAR PESAJES POR LOTE
+        // =====================================
 
-        pesajes.forEach((pesaje) => {
+        const animalesDelLote =
+          loteSeleccionado
+            ? datos.animales
+            : null;
 
-          if (
-            !pesaje.fecha ||
-            !pesaje.peso
-          ) {
-            return;
-          }
+        const idsAnimalesLote =
+          animalesDelLote
+            ? new Set(
+                animalesDelLote.map(
+                  (animal) => animal.id
+                )
+              )
+            : null;
 
-          const peso =
-            Number(pesaje.peso);
+        const pesajesFiltrados =
+          loteSeleccionado
+            ? pesajes.filter((pesaje) =>
+                idsAnimalesLote.has(
+                  pesaje.animalId
+                )
+              )
+            : pesajes;
 
-          if (
-            !Number.isFinite(peso) ||
-            peso <= 0
-          ) {
-            return;
-          }
+        // =====================================
+        // ORDENAR PESAJES POR FECHA
+        // =====================================
 
-          if (!pesosPorFecha[pesaje.fecha]) {
-            pesosPorFecha[pesaje.fecha] = [];
-          }
+        const pesajesValidos =
+          pesajesFiltrados
+            .filter((pesaje) => {
+              const peso =
+                Number(pesaje.peso);
 
-          pesosPorFecha[pesaje.fecha].push(
-            peso
-          );
-
-        });
-
-        const evolucionPeso =
-          Object.entries(
-            pesosPorFecha
-          )
-            .map(([fecha, pesos]) => {
-
-              const suma =
-                pesos.reduce(
-                  (total, peso) =>
-                    total + peso,
-                  0
-                );
-
-              const promedio =
-                suma / pesos.length;
-
-              return {
-                fecha,
-                pesoPromedio:
-                  Number(
-                    promedio.toFixed(1)
-                  ),
-              };
-
+              return (
+                pesaje.fecha &&
+                Number.isFinite(peso) &&
+                peso > 0
+              );
             })
             .sort(
               (a, b) =>
@@ -136,23 +121,102 @@ function Dashboard() {
                 new Date(b.fecha)
             );
 
+        // =====================================
+        // AGRUPAR PESAJES POR FECHA
+        // =====================================
+
+        const pesajesPorFecha = {};
+
+        pesajesValidos.forEach(
+          (pesaje) => {
+            if (
+              !pesajesPorFecha[
+                pesaje.fecha
+              ]
+            ) {
+              pesajesPorFecha[
+                pesaje.fecha
+              ] = [];
+            }
+
+            pesajesPorFecha[
+              pesaje.fecha
+            ].push(pesaje);
+          }
+        );
+
+        // =====================================
+        // CALCULAR ÚLTIMO PESO CONOCIDO
+        // DE CADA ANIMAL EN CADA FECHA
+        // =====================================
+
+        const ultimoPesoPorAnimal = {};
+
+        const evolucionPeso = [];
+
+        Object.keys(
+          pesajesPorFecha
+        )
+          .sort(
+            (a, b) =>
+              new Date(a) -
+              new Date(b)
+          )
+          .forEach((fecha) => {
+            pesajesPorFecha[
+              fecha
+            ].forEach((pesaje) => {
+              ultimoPesoPorAnimal[
+                pesaje.animalId
+              ] = Number(
+                pesaje.peso
+              );
+            });
+
+            const pesosActuales =
+              Object.values(
+                ultimoPesoPorAnimal
+              );
+
+            if (
+              pesosActuales.length === 0
+            ) {
+              return;
+            }
+
+            const suma =
+              pesosActuales.reduce(
+                (total, peso) =>
+                  total + peso,
+                0
+              );
+
+            const promedio =
+              suma /
+              pesosActuales.length;
+
+            evolucionPeso.push({
+              fecha,
+              pesoPromedio:
+                Number(
+                  promedio.toFixed(1)
+                ),
+            });
+          });
+
         setPesosHistoricos(
           evolucionPeso
         );
 
       } catch (error) {
-
         console.error(
           "Error cargando Dashboard:",
           error
         );
-
       }
-
     }
 
     cargarDashboard();
-
   }, [loteSeleccionado]);
 
   const sexoDistribucion = [
@@ -470,7 +534,7 @@ function Dashboard() {
           <Divider sx={{ mb: 2 }} />
 
           <Typography color="text.secondary">
-            Todavía no hay movimientos registrados.
+            Todavía no hay actividad registrada.
           </Typography>
 
         </Paper>

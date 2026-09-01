@@ -10,12 +10,7 @@ import {
 
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import PetsIcon from "@mui/icons-material/Pets";
-import ScaleIcon from "@mui/icons-material/Scale";
-import VaccinesIcon from "@mui/icons-material/Vaccines";
 import AgricultureIcon from "@mui/icons-material/Agriculture";
-import AssessmentIcon from "@mui/icons-material/Assessment";
-import SettingsIcon from "@mui/icons-material/Settings";
-import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 
 import { useNavigate, useLocation } from "react-router-dom";
@@ -34,16 +29,6 @@ const menu = [
     ruta: "/animales",
   },
   
-    {
-  texto: "Eventos",
-  icono: <VaccinesIcon />,
-  ruta: "/eventos",
-},
-  {
-  texto: "Movimientos",
-  icono: <LocalShippingIcon />,
-  ruta: "/movimientos",
-},
   {
     texto: "Lotes",
     icono: <AgricultureIcon />,

@@ -1,10 +1,25 @@
-import { collection, getDocs, doc, getDoc } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  doc,
+  getDoc,
+  query,
+  orderBy,
+  limit,
+} from "firebase/firestore";
+
 import { db } from "../firebase/firebase";
+
 
 export async function obtenerResumenLote(loteId) {
 
-  // Obtener lote
-  const loteDoc = await getDoc(doc(db, "lotes", loteId));
+  // =========================
+  // OBTENER LOTE
+  // =========================
+
+  const loteDoc = await getDoc(
+    doc(db, "lotes", loteId)
+  );
 
   if (!loteDoc.exists()) {
     return null;
@@ -15,96 +30,223 @@ export async function obtenerResumenLote(loteId) {
     ...loteDoc.data(),
   };
 
-  // Obtener animales
-  const snapshot = await getDocs(collection(db, "animales"));
+
+  // =========================
+  // OBTENER ANIMALES
+  // =========================
+
+  const snapshot = await getDocs(
+    collection(db, "animales")
+  );
 
   const animales = snapshot.docs
-    .map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
+    .map((documento) => ({
+      id: documento.id,
+      ...documento.data(),
     }))
-    .filter((animal) => animal.loteId === loteId);
+    .filter(
+      (animal) => animal.loteId === loteId
+    );
+
 
   const cantidadAnimales = animales.length;
 
+
+  // =========================
+  // PESOS
+  // =========================
+
   const animalesConPeso = animales.filter(
-    (a) => Number(a.peso) > 0
+    (animal) =>
+      Number(animal.peso) > 0
   );
 
+
   const pesoTotal = animalesConPeso.reduce(
-    (suma, animal) => suma + Number(animal.peso),
+    (suma, animal) =>
+      suma + Number(animal.peso),
     0
   );
 
+
   const pesoPromedio =
     animalesConPeso.length > 0
-      ? (pesoTotal / animalesConPeso.length).toFixed(1)
+      ? (
+          pesoTotal /
+          animalesConPeso.length
+        ).toFixed(1)
       : 0;
 
-  // Sexo
+
+  // =========================
+  // SEXO
+  // =========================
+
   const machos = animales.filter(
-    (a) => a.sexo === "Macho"
+    (animal) =>
+      animal.sexo === "Macho"
   ).length;
+
 
   const hembras = animales.filter(
-    (a) => a.sexo === "Hembra"
+    (animal) =>
+      animal.sexo === "Hembra"
   ).length;
 
-  // Estado
+
+  // =========================
+  // ESTADO
+  // =========================
+
   const activos = animales.filter(
-    (a) => a.estado === "Activo"
+    (animal) =>
+      animal.estado === "Activo"
   ).length;
+
 
   const vendidos = animales.filter(
-    (a) => a.estado === "Vendido"
+    (animal) =>
+      animal.estado === "Vendido"
   ).length;
+
 
   const muertos = animales.filter(
-    (a) => a.estado === "Muerto"
+    (animal) =>
+      animal.estado === "Muerto"
   ).length;
 
-  // Categorías
+
+  // =========================
+  // CATEGORÍAS
+  // =========================
+
   const categorias = {};
 
   animales.forEach((animal) => {
 
-    const categoria = animal.categoria || "Sin categoría";
+    const categoria =
+      animal.categoria ||
+      "Sin categoría";
 
     categorias[categoria] =
       (categorias[categoria] || 0) + 1;
 
   });
 
-  const categoriasChart = Object.entries(categorias).map(
-    ([nombre, cantidad]) => ({
-      nombre,
-      cantidad,
-    })
+
+  const categoriasChart =
+    Object.entries(categorias).map(
+      ([nombre, cantidad]) => ({
+        nombre,
+        cantidad,
+      })
+    );
+
+
+  // =========================
+  // SANIDAD
+  // =========================
+
+  let cantidadTratamientos = 0;
+
+  for (const animal of animales) {
+
+    const sanidadSnapshot =
+      await getDocs(
+        collection(
+          db,
+          "animales",
+          animal.id,
+          "sanidad"
+        )
+      );
+
+    cantidadTratamientos +=
+      sanidadSnapshot.docs.length;
+
+  }
+
+
+  // =========================
+  // ALIMENTACIÓN
+  // =========================
+
+  const alimentacionRef =
+    collection(
+      db,
+      "lotes",
+      loteId,
+      "alimentacion"
+    );
+
+
+  const alimentacionSnapshot =
+    await getDocs(alimentacionRef);
+
+
+  const alimentaciones =
+    alimentacionSnapshot.docs.map(
+      (documento) => ({
+        id: documento.id,
+        ...documento.data(),
+      })
+    );
+
+
+  const cantidadAlimentaciones =
+    alimentaciones.length;
+
+
+  // Ordenamos para encontrar
+  // la alimentación más reciente
+
+  alimentaciones.sort(
+    (a, b) =>
+      new Date(b.fecha) -
+      new Date(a.fecha)
   );
+
+
+  const ultimaAlimentacion =
+    alimentaciones.length > 0
+      ? alimentaciones[0]
+      : null;
+
+
+  // =========================
+  // RETORNAR RESUMEN
+  // =========================
 
   return {
 
     ...lote,
 
+    // Animales
     cantidadAnimales,
-
-    pesoPromedio,
-
-    pesoTotal,
-
     animales,
 
-    machos,
+    // Pesos
+    pesoPromedio,
+    pesoTotal,
 
+    // Sexo
+    machos,
     hembras,
 
+    // Estado
     activos,
-
     vendidos,
-
     muertos,
 
+    // Categorías
     categoriasChart,
+
+    // Sanidad
+    cantidadTratamientos,
+
+    // Alimentación
+    cantidadAlimentaciones,
+    ultimaAlimentacion,
 
   };
 
