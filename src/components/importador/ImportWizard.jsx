@@ -37,7 +37,7 @@ export default function ImportWizard() {
           archivo={archivo}
           finalizar={(datos) => {
             setResultado(datos);
-            setPaso(5);
+            setPaso(4);
           }}
         />
       );

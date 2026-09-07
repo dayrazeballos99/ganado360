@@ -1,6 +1,8 @@
-import { Typography, Paper, Button, Stack } from "@mui/material";
-import ImportadorPesajes from "../components/ImportadorPesajes";
+import { Typography, Paper, Stack } from "@mui/material";
 
+import ImportadorPesajes from "../components/ImportadorPesajes";
+import ImportadorAnimales from "../components/ImportadorAnimales";
+import ImportadorSanidad from "../components/ImportadorSanidad";
 
 function Importaciones() {
   return (
@@ -15,6 +17,10 @@ function Importaciones() {
 
       <Stack spacing={2}>
 
+        {/* =========================
+            IMPORTAR ANIMALES
+        ========================= */}
+
         <Paper sx={{ p: 3 }}>
           <Typography variant="h6">
             🐄 Importar Animales
@@ -24,10 +30,14 @@ function Importaciones() {
             Crear animales desde un archivo Excel.
           </Typography>
 
-          <Button variant="contained">
-            Próximamente
-          </Button>
+          <ImportadorAnimales />
         </Paper>
+
+
+        {/* =========================
+            IMPORTAR PESAJES
+            NO TOCAMOS NADA
+        ========================= */}
 
         <Paper sx={{ p: 3 }}>
           <Typography variant="h6">
@@ -39,8 +49,12 @@ function Importaciones() {
           </Typography>
 
           <ImportadorPesajes />
-          
         </Paper>
+
+
+        {/* =========================
+            IMPORTAR SANIDAD
+        ========================= */}
 
         <Paper sx={{ p: 3 }}>
           <Typography variant="h6">
@@ -51,9 +65,7 @@ function Importaciones() {
             Importar vacunaciones y tratamientos.
           </Typography>
 
-          <Button variant="contained">
-            Próximamente
-          </Button>
+          <ImportadorSanidad />
         </Paper>
 
       </Stack>
